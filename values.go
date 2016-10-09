@@ -196,5 +196,7 @@ func (u *urlValue) Set(val string) error {
 
 // String converts this urlValue to a string.
 func (u *urlValue) String() string {
-	return fmt.Sprintf("%s", *u)
+	url := url.URL(*u)
+
+	return fmt.Sprintf("%v", url.String())
 }

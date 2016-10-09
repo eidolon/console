@@ -1,6 +1,7 @@
 package console
 
 import (
+	"net/url"
 	"testing"
 	"time"
 )
@@ -14,13 +15,8 @@ func TestBoolValue(t *testing.T) {
 			truthyValue := BoolValue(&truthy)
 			falseyValue := BoolValue(&falsey)
 
-			if actual := truthyValue.String(); actual != "true" {
-				t.Errorf("Expected 'true', got '%s'.", actual)
-			}
-
-			if actual := falseyValue.String(); actual != "false" {
-				t.Errorf("Expected 'true', got '%s'.", actual)
-			}
+			assertEqual(t, truthyValue.String(), "true")
+			assertEqual(t, falseyValue.String(), "false")
 		})
 	})
 
@@ -45,9 +41,7 @@ func TestBoolValue(t *testing.T) {
 
 			for _, item := range valid {
 				err := value.Set(item)
-				if err != nil {
-					t.Errorf("Unexpected error: '%s'.", err)
-				}
+				assertOK(t, err)
 			}
 		})
 
@@ -64,9 +58,7 @@ func TestBoolValue(t *testing.T) {
 
 			for _, item := range invalid {
 				err := value.Set(item)
-				if err == nil {
-					t.Error("Expected error, did not receive one.")
-				}
+				assertNotOK(t, err)
 			}
 		})
 
@@ -74,21 +66,13 @@ func TestBoolValue(t *testing.T) {
 			ref := true
 			value := BoolValue(&ref)
 
-			if ref != true {
-				t.Errorf("Expected true, got %v", ref)
-			}
+			assertEqual(t, ref, true)
 
 			value.Set("false")
-
-			if ref != false {
-				t.Errorf("Expected false, got %v", ref)
-			}
+			assertEqual(t, ref, false)
 
 			value.Set("true")
-
-			if ref != true {
-				t.Errorf("Expected true, got %v", ref)
-			}
+			assertEqual(t, ref, true)
 		})
 	})
 
@@ -114,10 +98,7 @@ func TestBoolValue(t *testing.T) {
 				value.Set(in)
 
 				actual := value.String()
-
-				if actual != expected {
-					t.Errorf("Expected '%s', got '%s'.", expected, actual)
-				}
+				assertEqual(t, expected, actual)
 			}
 		})
 	})
@@ -126,12 +107,7 @@ func TestBoolValue(t *testing.T) {
 		t.Run("should always return 'true'", func(t *testing.T) {
 			var value boolValue
 
-			expected := "true"
-			actual := value.FlagValue()
-
-			if actual != expected {
-				t.Errorf("Expected '%s', got '%s'.", expected, actual)
-			}
+			assertEqual(t, "true", value.FlagValue())
 		})
 	})
 }
@@ -164,9 +140,7 @@ func TestDurationValue(t *testing.T) {
 
 			for _, item := range valid {
 				err := value.Set(item)
-				if err != nil {
-					t.Errorf("Unexpected error: '%s'.", err)
-				}
+				assertOK(t, err)
 			}
 		})
 
@@ -182,9 +156,7 @@ func TestDurationValue(t *testing.T) {
 
 			for _, item := range invalid {
 				err := value.Set(item)
-				if err == nil {
-					t.Error("Expected error, did not receive one.")
-				}
+				assertNotOK(t, err)
 			}
 		})
 
@@ -192,21 +164,13 @@ func TestDurationValue(t *testing.T) {
 			ref := time.Second
 			value := DurationValue(&ref)
 
-			if ref != time.Second {
-				t.Errorf("Expected true, got %v", ref)
-			}
+			assertEqual(t, ref, time.Second)
 
 			value.Set("1m")
-
-			if ref != time.Minute {
-				t.Errorf("Expected false, got %v", ref)
-			}
+			assertEqual(t, ref, time.Minute)
 
 			value.Set("1h")
-
-			if ref != time.Hour {
-				t.Errorf("Expected true, got %v", ref)
-			}
+			assertEqual(t, ref, time.Hour)
 		})
 	})
 
@@ -226,10 +190,7 @@ func TestDurationValue(t *testing.T) {
 			value.Set(in)
 
 			actual := value.String()
-
-			if actual != expected {
-				t.Errorf("Expected '%s', got '%s'.", expected, actual)
-			}
+			assertEqual(t, expected, actual)
 		}
 	})
 }
@@ -255,5 +216,19 @@ func TestStringValue(t *testing.T) {
 }
 
 func TestUrlValue(t *testing.T) {
+	t.Run("Set()", func(t *testing.T) {
+		t.Run("should modify the URL that it references", func(t *testing.T) {
+			oldUrl := "https://www.google.co.uk/"
+			newUrl := "https://www.elliotdwright.com/"
 
+			ref, err := url.Parse(oldUrl)
+			assertOK(t, err)
+
+			value := URLValue(ref)
+			assertEqual(t, oldUrl, ref.String())
+
+			value.Set(newUrl)
+			assertEqual(t, newUrl, ref.String())
+		})
+	})
 }
