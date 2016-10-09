@@ -17,7 +17,7 @@ type ParameterValue interface {
 	String() string
 }
 
-// FlagValue representats an option that does not have a value. Allows toggling behaviour.
+// FlagValue represents an option that does not have a value. Allows toggling behaviour.
 type FlagValue interface {
 	ParameterValue
 	FlagValue() string
