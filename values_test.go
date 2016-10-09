@@ -8,16 +8,14 @@ import (
 
 func TestBoolValue(t *testing.T) {
 	t.Run("BoolValue()", func(t *testing.T) {
-		t.Run("should create a boolValue with the given value", func(t *testing.T) {
-			truthy := true
-			falsey := false
+		truthy := true
+		falsey := false
 
-			truthyValue := BoolValue(&truthy)
-			falseyValue := BoolValue(&falsey)
+		truthyValue := BoolValue(&truthy)
+		falseyValue := BoolValue(&falsey)
 
-			assertEqual(t, truthyValue.String(), "true")
-			assertEqual(t, falseyValue.String(), "false")
-		})
+		assertEqual(t, truthyValue.String(), "true")
+		assertEqual(t, falseyValue.String(), "false")
 	})
 
 	t.Run("Set()", func(t *testing.T) {
@@ -77,51 +75,43 @@ func TestBoolValue(t *testing.T) {
 	})
 
 	t.Run("String()", func(t *testing.T) {
-		t.Run("should return either 'true' or 'false'", func(t *testing.T) {
-			inOut := map[string]string{
-				"1":     "true",
-				"t":     "true",
-				"T":     "true",
-				"TRUE":  "true",
-				"true":  "true",
-				"True":  "true",
-				"0":     "false",
-				"f":     "false",
-				"F":     "false",
-				"FALSE": "false",
-				"false": "false",
-				"False": "false",
-			}
+		inOut := map[string]string{
+			"1":     "true",
+			"t":     "true",
+			"T":     "true",
+			"TRUE":  "true",
+			"true":  "true",
+			"True":  "true",
+			"0":     "false",
+			"f":     "false",
+			"F":     "false",
+			"FALSE": "false",
+			"false": "false",
+			"False": "false",
+		}
 
-			for in, expected := range inOut {
-				value := new(boolValue)
-				value.Set(in)
+		for in, expected := range inOut {
+			value := new(boolValue)
+			value.Set(in)
 
-				actual := value.String()
-				assertEqual(t, expected, actual)
-			}
-		})
+			actual := value.String()
+			assertEqual(t, expected, actual)
+		}
 	})
 
 	t.Run("FlagValue()", func(t *testing.T) {
-		t.Run("should always return 'true'", func(t *testing.T) {
-			var value boolValue
+		var value boolValue
 
-			assertEqual(t, "true", value.FlagValue())
-		})
+		assertEqual(t, "true", value.FlagValue())
 	})
 }
 
 func TestDurationValue(t *testing.T) {
 	t.Run("DurationValue()", func(t *testing.T) {
-		t.Run("should create a duractionValue with the given value", func(t *testing.T) {
-			duration := time.Second
-			durationValue := DurationValue(&duration)
+		duration := time.Second
+		durationValue := DurationValue(&duration)
 
-			if actual := durationValue.String(); actual != "1s" {
-				t.Errorf("Expected '1s', got '%s'.", actual)
-			}
-		})
+		assertEqual(t, "1s", durationValue.String())
 	})
 
 	t.Run("Set()", func(t *testing.T) {
@@ -216,7 +206,32 @@ func TestStringValue(t *testing.T) {
 }
 
 func TestUrlValue(t *testing.T) {
+	t.Run("URLValue()", func(t *testing.T) {
+		expected := "https://www.google.co.uk/"
+
+		actual, err := url.Parse(expected)
+		assertOK(t, err)
+
+		actualValue := URLValue(actual)
+		assertEqual(t, expected, actualValue.String())
+	})
+
 	t.Run("Set()", func(t *testing.T) {
+		t.Run("should not error for valid duration values", func(t *testing.T) {
+			var value urlValue
+
+			valid := []string{
+				"https://www.google.co.uk/",
+				"ws://www.elliotdwright.com:9000/",
+				"ftp://whouses.ftpanymore.com:21/",
+			}
+
+			for _, item := range valid {
+				err := value.Set(item)
+				assertOK(t, err)
+			}
+		})
+
 		t.Run("should modify the URL that it references", func(t *testing.T) {
 			oldUrl := "https://www.google.co.uk/"
 			newUrl := "https://www.elliotdwright.com/"
@@ -230,5 +245,21 @@ func TestUrlValue(t *testing.T) {
 			value.Set(newUrl)
 			assertEqual(t, newUrl, ref.String())
 		})
+	})
+
+	t.Run("String()", func(t *testing.T) {
+		inOut := map[string]string{
+			"https://www.google.co.uk/":        "https://www.google.co.uk/",
+			"ws://www.elliotdwright.com:9000/": "ws://www.elliotdwright.com:9000/",
+			"ftp://whouses.ftpanymore.com:21/": "ftp://whouses.ftpanymore.com:21/",
+		}
+
+		for in, expected := range inOut {
+			value := new(urlValue)
+			value.Set(in)
+
+			actual := value.String()
+			assertEqual(t, expected, actual)
+		}
 	})
 }
