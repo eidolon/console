@@ -33,16 +33,19 @@ func BoolValue(ref *bool) *boolValue {
 	return (*boolValue)(ref)
 }
 
+// Set assigns a value to the value that this boolValue references.
 func (b *boolValue) Set(s string) error {
 	v, err := strconv.ParseBool(s)
 	*b = boolValue(v)
 	return err
 }
 
+// String converts this boolValue to a string.
 func (b *boolValue) String() string {
 	return fmt.Sprintf("%v", *b)
 }
 
+// FlagValue returns the default value boolValue when no value is present (i.e. when used as a flag)
 func (b *boolValue) FlagValue() string {
 	return "true"
 }
@@ -56,14 +59,40 @@ func DurationValue(ref *time.Duration) *durationValue {
 	return (*durationValue)(ref)
 }
 
+// Set assigns a value to the value that this durationValue references.
 func (d *durationValue) Set(s string) error {
 	v, err := time.ParseDuration(s)
 	*d = durationValue(v)
 	return err
 }
 
+// String converts this durationValue to a string.
 func (d *durationValue) String() string {
 	return (*time.Duration)(d).String()
+}
+
+// float32Value abstracts functionality for parsing input that should be represented as a float32.
+type float32Value float32
+
+// Float32Value creates a new float32Value.
+func Float32Value(ref *float32) *float32Value {
+	return (*float32Value)(ref)
+}
+
+// Set assigns a value to the value that this float32Value references.
+func (f *float32Value) Set(s string) error {
+	v, err := strconv.ParseFloat(s, 32)
+	if err != nil {
+		return err
+	}
+
+	*f = float32Value(float32(v))
+	return err
+}
+
+// String converts this float32Value to a string.
+func (f *float32Value) String() string {
+	return fmt.Sprintf("%v", *f)
 }
 
 // float64Value abstracts functionality for parsing input that should be represented as a float64.
@@ -74,12 +103,14 @@ func Float64Value(ref *float64) *float64Value {
 	return (*float64Value)(ref)
 }
 
+// Set assigns a value to the value that this float64Value references.
 func (f *float64Value) Set(s string) error {
 	v, err := strconv.ParseFloat(s, 64)
 	*f = float64Value(v)
 	return err
 }
 
+// String converts this float64Value to a string.
 func (f *float64Value) String() string {
 	return fmt.Sprintf("%v", *f)
 }
@@ -92,12 +123,14 @@ func IntValue(ref *int) *intValue {
 	return (*intValue)(ref)
 }
 
+// Set assigns a value to the value that this intValue references.
 func (i *intValue) Set(s string) error {
 	v, err := strconv.ParseInt(s, 0, 64)
 	*i = intValue(v)
 	return err
 }
 
+// String converts this intValue to a string.
 func (i *intValue) String() string {
 	return fmt.Sprintf("%v", *i)
 }
@@ -110,6 +143,7 @@ func IPValue(ref *net.IP) *ipValue {
 	return (*ipValue)(ref)
 }
 
+// Set assigns a value to the value that this ipValue references.
 func (s *ipValue) Set(val string) error {
 	ip := net.ParseIP(val)
 	if ip == nil {
@@ -121,6 +155,7 @@ func (s *ipValue) Set(val string) error {
 	return nil
 }
 
+// String converts this ipValue to a string.
 func (s *ipValue) String() string {
 	return fmt.Sprintf("%s", *s)
 }
@@ -133,27 +168,33 @@ func StringValue(ref *string) *stringValue {
 	return (*stringValue)(ref)
 }
 
+// Set assigns a value to the value that this stringValue references.
 func (s *stringValue) Set(val string) error {
 	*s = stringValue(val)
 	return nil
 }
 
+// String converts this stringValue to a string.
 func (s *stringValue) String() string {
 	return fmt.Sprintf("%s", *s)
 }
 
+// urlValue abstracts functionality for parsing input that should be represented as a URL.
 type urlValue url.URL
 
-func UrlValue(ref *url.URL) *urlValue {
+// URLValue creates a new urlValue.
+func URLValue(ref *url.URL) *urlValue {
 	return (*urlValue)(ref)
 }
 
+// Set assigns a value to the value that this urlValue references.
 func (u *urlValue) Set(val string) error {
 	res, err := url.Parse(val)
 	*u = urlValue(*res)
 	return err
 }
 
+// String converts this urlValue to a string.
 func (u *urlValue) String() string {
 	return fmt.Sprintf("%s", *u)
 }

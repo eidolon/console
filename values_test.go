@@ -233,3 +233,27 @@ func TestDurationValue(t *testing.T) {
 		}
 	})
 }
+
+func TestFloat32Value(t *testing.T) {
+
+}
+
+func TestFloat64Value(t *testing.T) {
+
+}
+
+func TestIntValue(t *testing.T) {
+
+}
+
+func TestIPValue(t *testing.T) {
+
+}
+
+func TestStringValue(t *testing.T) {
+
+}
+
+func TestUrlValue(t *testing.T) {
+
+}
