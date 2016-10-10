@@ -157,7 +157,9 @@ func (s *ipValue) Set(val string) error {
 
 // String converts this ipValue to a string.
 func (s *ipValue) String() string {
-	return fmt.Sprintf("%s", *s)
+	ip := net.IP(*s)
+
+	return ip.String()
 }
 
 // stringValue accepts string input, and transparently assigns it to a pointer.

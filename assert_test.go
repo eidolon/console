@@ -31,10 +31,10 @@ func assertEqual(t *testing.T, expected, actual interface{}) {
 			"assert: %s:%d: Expected %v (type %v) to equal %v (type %v).",
 			trimLocation(file),
 			line,
-			expected,
-			reflect.TypeOf(expected),
 			actual,
 			reflect.TypeOf(actual),
+			expected,
+			reflect.TypeOf(expected),
 		)
 	}
 }
@@ -48,10 +48,10 @@ func assertUnequal(t *testing.T, expected, actual interface{}) {
 			"assert: %s:%d: Expected %v (type %v) not to equal got %v (type %v).",
 			trimLocation(file),
 			line,
-			expected,
-			reflect.TypeOf(expected),
 			actual,
 			reflect.TypeOf(actual),
+			expected,
+			reflect.TypeOf(expected),
 		)
 	}
 }
