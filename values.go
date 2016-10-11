@@ -29,7 +29,7 @@ type FlagValue interface {
 type boolValue bool
 
 // BoolValue creates a new boolValue.
-func BoolValue(ref *bool) *boolValue {
+func newBoolValue(ref *bool) *boolValue {
 	return (*boolValue)(ref)
 }
 
@@ -55,7 +55,7 @@ func (b *boolValue) FlagValue() string {
 type durationValue time.Duration
 
 // DurationValue creates a new durationValue.
-func DurationValue(ref *time.Duration) *durationValue {
+func newDurationValue(ref *time.Duration) *durationValue {
 	return (*durationValue)(ref)
 }
 
@@ -75,7 +75,7 @@ func (d *durationValue) String() string {
 type float32Value float32
 
 // Float32Value creates a new float32Value.
-func Float32Value(ref *float32) *float32Value {
+func newFloat32Value(ref *float32) *float32Value {
 	return (*float32Value)(ref)
 }
 
@@ -99,7 +99,7 @@ func (f *float32Value) String() string {
 type float64Value float64
 
 // Float64Value creates a new float64Value.
-func Float64Value(ref *float64) *float64Value {
+func newFloat64Value(ref *float64) *float64Value {
 	return (*float64Value)(ref)
 }
 
@@ -119,7 +119,7 @@ func (f *float64Value) String() string {
 type intValue int
 
 // IntValue creates a new intValue.
-func IntValue(ref *int) *intValue {
+func newIntValue(ref *int) *intValue {
 	return (*intValue)(ref)
 }
 
@@ -139,7 +139,7 @@ func (i *intValue) String() string {
 type ipValue net.IP
 
 // IPValue creates a new ipValue.
-func IPValue(ref *net.IP) *ipValue {
+func newIPValue(ref *net.IP) *ipValue {
 	return (*ipValue)(ref)
 }
 
@@ -166,7 +166,7 @@ func (s *ipValue) String() string {
 type stringValue string
 
 // StringValue creates a new stringValue.
-func StringValue(ref *string) *stringValue {
+func newStringValue(ref *string) *stringValue {
 	return (*stringValue)(ref)
 }
 
@@ -185,7 +185,7 @@ func (s *stringValue) String() string {
 type urlValue url.URL
 
 // URLValue creates a new urlValue.
-func URLValue(ref *url.URL) *urlValue {
+func newURLValue(ref *url.URL) *urlValue {
 	return (*urlValue)(ref)
 }
 

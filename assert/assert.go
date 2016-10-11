@@ -1,15 +1,19 @@
-package console
+package assert
 
 import (
 	"os"
 	"reflect"
 	"runtime"
 	"strings"
-	"testing"
 )
 
-// assert asserts that the given condition is truthy.
-func assert(t *testing.T, condition bool, message string) {
+// tester provides a simpler testing interface for use in mocks.
+type tester interface {
+	Errorf(format string, args ...interface{})
+}
+
+// True asserts that the given condition is truthy.
+func True(t tester, condition bool, message string) {
 	_, file, line, _ := runtime.Caller(1)
 
 	if !condition {
@@ -22,8 +26,22 @@ func assert(t *testing.T, condition bool, message string) {
 	}
 }
 
-// assertEquals asserts that the given expected and actual arguments are equal.
-func assertEqual(t *testing.T, expected, actual interface{}) {
+// False asserts that the given condition is falsey.
+func False(t tester, condition bool, message string) {
+	_, file, line, _ := runtime.Caller(1)
+
+	if condition {
+		t.Errorf(
+			"assert: %s:%d: %s",
+			trimLocation(file),
+			line,
+			message,
+		)
+	}
+}
+
+// Equal asserts that the given expected and actual arguments are equal.
+func Equal(t tester, expected, actual interface{}) {
 	_, file, line, _ := runtime.Caller(1)
 
 	if !reflect.DeepEqual(expected, actual) {
@@ -39,8 +57,8 @@ func assertEqual(t *testing.T, expected, actual interface{}) {
 	}
 }
 
-// assertUnequal asserts that the given expected and actual arguments are not equal.
-func assertUnequal(t *testing.T, expected, actual interface{}) {
+// NotEqual asserts that the given expected and actual arguments are not equal.
+func NotEqual(t tester, expected, actual interface{}) {
 	_, file, line, _ := runtime.Caller(1)
 
 	if reflect.DeepEqual(expected, actual) {
@@ -56,8 +74,8 @@ func assertUnequal(t *testing.T, expected, actual interface{}) {
 	}
 }
 
-// assertOK checks that an error was not produced, and reacts accordingly.
-func assertOK(t *testing.T, err error) {
+// OK checks that an error was not produced, and reacts accordingly.
+func OK(t tester, err error) {
 	_, file, line, _ := runtime.Caller(1)
 
 	if err != nil {
@@ -70,8 +88,8 @@ func assertOK(t *testing.T, err error) {
 	}
 }
 
-// assertNotOK checks that an error was produced, and reacts accordingly.
-func assertNotOK(t *testing.T, err error) {
+// NotOK checks that an error was produced, and reacts accordingly.
+func NotOK(t tester, err error) {
 	_, file, line, _ := runtime.Caller(1)
 
 	if err == nil {
@@ -85,10 +103,9 @@ func assertNotOK(t *testing.T, err error) {
 
 // trimLocation takes an absolute file path, and returns a much shorter relative path.
 func trimLocation(file string) string {
-	cwd, err := os.Getwd()
-	if err != nil {
-		panic(err)
-	}
+	// Alright, I know, this error is ignored, I'm a terrible person, yada yada yada. It'll just
+	// panic anyway, and I don't think that this is testable otherwise...
+	cwd, _ := os.Getwd()
 
 	return strings.Replace(file, cwd+"/", "", -1)
 }

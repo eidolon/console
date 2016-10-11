@@ -5,18 +5,20 @@ import (
 	"net/url"
 	"testing"
 	"time"
+
+	"github.com/eidolon/console/assert"
 )
 
 func TestBoolValue(t *testing.T) {
-	t.Run("BoolValue()", func(t *testing.T) {
+	t.Run("newBoolValue()", func(t *testing.T) {
 		truthy := true
 		falsey := false
 
-		truthyValue := BoolValue(&truthy)
-		falseyValue := BoolValue(&falsey)
+		truthyValue := newBoolValue(&truthy)
+		falseyValue := newBoolValue(&falsey)
 
-		assertEqual(t, truthyValue.String(), "true")
-		assertEqual(t, falseyValue.String(), "false")
+		assert.Equal(t, truthyValue.String(), "true")
+		assert.Equal(t, falseyValue.String(), "false")
 	})
 
 	t.Run("Set()", func(t *testing.T) {
@@ -40,7 +42,7 @@ func TestBoolValue(t *testing.T) {
 
 			for _, item := range valid {
 				err := value.Set(item)
-				assertOK(t, err)
+				assert.OK(t, err)
 			}
 		})
 
@@ -57,21 +59,21 @@ func TestBoolValue(t *testing.T) {
 
 			for _, item := range invalid {
 				err := value.Set(item)
-				assertNotOK(t, err)
+				assert.NotOK(t, err)
 			}
 		})
 
 		t.Run("should modify the bool that it references", func(t *testing.T) {
 			ref := true
-			value := BoolValue(&ref)
+			value := newBoolValue(&ref)
 
-			assertEqual(t, true, ref)
+			assert.Equal(t, true, ref)
 
 			value.Set("false")
-			assertEqual(t, false, ref)
+			assert.Equal(t, false, ref)
 
 			value.Set("true")
-			assertEqual(t, true, ref)
+			assert.Equal(t, true, ref)
 		})
 	})
 
@@ -96,23 +98,23 @@ func TestBoolValue(t *testing.T) {
 			value.Set(in)
 
 			actual := value.String()
-			assertEqual(t, expected, actual)
+			assert.Equal(t, expected, actual)
 		}
 	})
 
 	t.Run("FlagValue()", func(t *testing.T) {
 		var value boolValue
 
-		assertEqual(t, "true", value.FlagValue())
+		assert.Equal(t, "true", value.FlagValue())
 	})
 }
 
 func TestDurationValue(t *testing.T) {
-	t.Run("DurationValue()", func(t *testing.T) {
+	t.Run("newDurationValue()", func(t *testing.T) {
 		duration := time.Second
-		durationValue := DurationValue(&duration)
+		durationValue := newDurationValue(&duration)
 
-		assertEqual(t, "1s", durationValue.String())
+		assert.Equal(t, "1s", durationValue.String())
 	})
 
 	t.Run("Set()", func(t *testing.T) {
@@ -131,7 +133,7 @@ func TestDurationValue(t *testing.T) {
 
 			for _, item := range valid {
 				err := value.Set(item)
-				assertOK(t, err)
+				assert.OK(t, err)
 			}
 		})
 
@@ -147,21 +149,21 @@ func TestDurationValue(t *testing.T) {
 
 			for _, item := range invalid {
 				err := value.Set(item)
-				assertNotOK(t, err)
+				assert.NotOK(t, err)
 			}
 		})
 
 		t.Run("should modify the bool that it references", func(t *testing.T) {
 			ref := time.Second
-			value := DurationValue(&ref)
+			value := newDurationValue(&ref)
 
-			assertEqual(t, time.Second, ref)
+			assert.Equal(t, time.Second, ref)
 
 			value.Set("1m")
-			assertEqual(t, time.Minute, ref)
+			assert.Equal(t, time.Minute, ref)
 
 			value.Set("1h")
-			assertEqual(t, ref, time.Hour)
+			assert.Equal(t, ref, time.Hour)
 		})
 	})
 
@@ -181,17 +183,17 @@ func TestDurationValue(t *testing.T) {
 			value.Set(in)
 
 			actual := value.String()
-			assertEqual(t, expected, actual)
+			assert.Equal(t, expected, actual)
 		}
 	})
 }
 
 func TestFloat32Value(t *testing.T) {
-	t.Run("Float32Value()", func(t *testing.T) {
+	t.Run("newFloat32Value()", func(t *testing.T) {
 		float := float32(3.14)
-		floatValue := Float32Value(&float)
+		floatValue := newFloat32Value(&float)
 
-		assertEqual(t, "3.14", floatValue.String())
+		assert.Equal(t, "3.14", floatValue.String())
 	})
 
 	t.Run("Set()", func(t *testing.T) {
@@ -207,7 +209,7 @@ func TestFloat32Value(t *testing.T) {
 
 			for _, item := range valid {
 				err := value.Set(item)
-				assertOK(t, err)
+				assert.OK(t, err)
 			}
 		})
 
@@ -222,21 +224,21 @@ func TestFloat32Value(t *testing.T) {
 
 			for _, item := range invalid {
 				err := value.Set(item)
-				assertNotOK(t, err)
+				assert.NotOK(t, err)
 			}
 		})
 
 		t.Run("should modify the float32 that it references", func(t *testing.T) {
 			ref := float32(3.14)
-			value := Float32Value(&ref)
+			value := newFloat32Value(&ref)
 
-			assertEqual(t, float32(3.14), ref)
+			assert.Equal(t, float32(3.14), ref)
 
 			value.Set("3.14159")
-			assertEqual(t, float32(3.14159), ref)
+			assert.Equal(t, float32(3.14159), ref)
 
 			value.Set("10")
-			assertEqual(t, float32(10), ref)
+			assert.Equal(t, float32(10), ref)
 		})
 	})
 
@@ -253,17 +255,17 @@ func TestFloat32Value(t *testing.T) {
 			value.Set(in)
 
 			actual := value.String()
-			assertEqual(t, expected, actual)
+			assert.Equal(t, expected, actual)
 		}
 	})
 }
 
 func TestFloat64Value(t *testing.T) {
-	t.Run("Float64Value()", func(t *testing.T) {
+	t.Run("newFloat64Value()", func(t *testing.T) {
 		float := float64(3.14)
-		floatValue := Float64Value(&float)
+		floatValue := newFloat64Value(&float)
 
-		assertEqual(t, "3.14", floatValue.String())
+		assert.Equal(t, "3.14", floatValue.String())
 	})
 
 	t.Run("Set()", func(t *testing.T) {
@@ -279,7 +281,7 @@ func TestFloat64Value(t *testing.T) {
 
 			for _, item := range valid {
 				err := value.Set(item)
-				assertOK(t, err)
+				assert.OK(t, err)
 			}
 		})
 
@@ -294,21 +296,21 @@ func TestFloat64Value(t *testing.T) {
 
 			for _, item := range invalid {
 				err := value.Set(item)
-				assertNotOK(t, err)
+				assert.NotOK(t, err)
 			}
 		})
 
 		t.Run("should modify the float64 that it references", func(t *testing.T) {
 			ref := float64(3.14)
-			value := Float64Value(&ref)
+			value := newFloat64Value(&ref)
 
-			assertEqual(t, float64(3.14), ref)
+			assert.Equal(t, float64(3.14), ref)
 
 			value.Set("3.14159")
-			assertEqual(t, float64(3.14159), ref)
+			assert.Equal(t, float64(3.14159), ref)
 
 			value.Set("10")
-			assertEqual(t, float64(10), ref)
+			assert.Equal(t, float64(10), ref)
 		})
 	})
 
@@ -325,17 +327,17 @@ func TestFloat64Value(t *testing.T) {
 			value.Set(in)
 
 			actual := value.String()
-			assertEqual(t, expected, actual)
+			assert.Equal(t, expected, actual)
 		}
 	})
 }
 
 func TestIntValue(t *testing.T) {
-	t.Run("IntValue()", func(t *testing.T) {
+	t.Run("newIntValue()", func(t *testing.T) {
 		intRef := 3
-		intValue := IntValue(&intRef)
+		intValue := newIntValue(&intRef)
 
-		assertEqual(t, "3", intValue.String())
+		assert.Equal(t, "3", intValue.String())
 	})
 
 	t.Run("Set()", func(t *testing.T) {
@@ -351,7 +353,7 @@ func TestIntValue(t *testing.T) {
 
 			for _, item := range valid {
 				err := value.Set(item)
-				assertOK(t, err)
+				assert.OK(t, err)
 			}
 		})
 
@@ -367,21 +369,21 @@ func TestIntValue(t *testing.T) {
 
 			for _, item := range invalid {
 				err := value.Set(item)
-				assertNotOK(t, err)
+				assert.NotOK(t, err)
 			}
 		})
 
 		t.Run("should modify the int that it references", func(t *testing.T) {
 			ref := 5
-			value := IntValue(&ref)
+			value := newIntValue(&ref)
 
-			assertEqual(t, 5, ref)
+			assert.Equal(t, 5, ref)
 
 			value.Set("10")
-			assertEqual(t, 10, ref)
+			assert.Equal(t, 10, ref)
 
 			value.Set("25")
-			assertEqual(t, 25, ref)
+			assert.Equal(t, 25, ref)
 		})
 	})
 
@@ -397,17 +399,17 @@ func TestIntValue(t *testing.T) {
 			value.Set(in)
 
 			actual := value.String()
-			assertEqual(t, expected, actual)
+			assert.Equal(t, expected, actual)
 		}
 	})
 }
 
 func TestIPValue(t *testing.T) {
-	t.Run("IPValue()", func(t *testing.T) {
+	t.Run("newIPValue()", func(t *testing.T) {
 		ipRef := net.ParseIP("127.0.0.1")
-		ipValue := IPValue(&ipRef)
+		ipValue := newIPValue(&ipRef)
 
-		assertEqual(t, "127.0.0.1", ipValue.String())
+		assert.Equal(t, "127.0.0.1", ipValue.String())
 	})
 
 	t.Run("Set()", func(t *testing.T) {
@@ -425,7 +427,7 @@ func TestIPValue(t *testing.T) {
 
 			for _, item := range valid {
 				err := value.Set(item)
-				assertOK(t, err)
+				assert.OK(t, err)
 			}
 		})
 
@@ -442,21 +444,21 @@ func TestIPValue(t *testing.T) {
 
 			for _, item := range invalid {
 				err := value.Set(item)
-				assertNotOK(t, err)
+				assert.NotOK(t, err)
 			}
 		})
 
 		t.Run("should modify the IP that it references", func(t *testing.T) {
 			ref := net.ParseIP("127.0.0.1")
-			value := IPValue(&ref)
+			value := newIPValue(&ref)
 
-			assertEqual(t, value.String(), ref.String())
+			assert.Equal(t, value.String(), ref.String())
 
 			value.Set("192.168.0.1")
-			assertEqual(t, value.String(), ref.String())
+			assert.Equal(t, value.String(), ref.String())
 
 			value.Set("10.0.0.1")
-			assertEqual(t, value.String(), ref.String())
+			assert.Equal(t, value.String(), ref.String())
 		})
 	})
 
@@ -472,17 +474,17 @@ func TestIPValue(t *testing.T) {
 			value.Set(in)
 
 			actual := value.String()
-			assertEqual(t, expected, actual)
+			assert.Equal(t, expected, actual)
 		}
 	})
 }
 
 func TestStringValue(t *testing.T) {
-	t.Run("StringValue()", func(t *testing.T) {
+	t.Run("newStringValue()", func(t *testing.T) {
 		expected := "Hello, World!"
-		actual := StringValue(&expected)
+		actual := newStringValue(&expected)
 
-		assertEqual(t, expected, actual.String())
+		assert.Equal(t, expected, actual.String())
 	})
 
 	t.Run("Set()", func(t *testing.T) {
@@ -499,18 +501,18 @@ func TestStringValue(t *testing.T) {
 
 			for _, item := range valid {
 				err := value.Set(item)
-				assertOK(t, err)
+				assert.OK(t, err)
 			}
 		})
 
 		t.Run("should modify the string that it references", func(t *testing.T) {
 			ref := "Hello"
 
-			value := StringValue(&ref)
-			assertEqual(t, "Hello", ref)
+			value := newStringValue(&ref)
+			assert.Equal(t, "Hello", ref)
 
 			value.Set("World")
-			assertEqual(t, "World", ref)
+			assert.Equal(t, "World", ref)
 		})
 	})
 
@@ -527,20 +529,20 @@ func TestStringValue(t *testing.T) {
 			value.Set(in)
 
 			actual := value.String()
-			assertEqual(t, expected, actual)
+			assert.Equal(t, expected, actual)
 		}
 	})
 }
 
 func TestUrlValue(t *testing.T) {
-	t.Run("URLValue()", func(t *testing.T) {
+	t.Run("newURLValue()", func(t *testing.T) {
 		expected := "https://www.google.co.uk/"
 
 		actual, err := url.Parse(expected)
-		assertOK(t, err)
+		assert.OK(t, err)
 
-		actualValue := URLValue(actual)
-		assertEqual(t, expected, actualValue.String())
+		actualValue := newURLValue(actual)
+		assert.Equal(t, expected, actualValue.String())
 	})
 
 	t.Run("Set()", func(t *testing.T) {
@@ -555,7 +557,7 @@ func TestUrlValue(t *testing.T) {
 
 			for _, item := range valid {
 				err := value.Set(item)
-				assertOK(t, err)
+				assert.OK(t, err)
 			}
 		})
 
@@ -564,13 +566,13 @@ func TestUrlValue(t *testing.T) {
 			newUrl := "https://www.elliotdwright.com/"
 
 			ref, err := url.Parse(oldUrl)
-			assertOK(t, err)
+			assert.OK(t, err)
 
-			value := URLValue(ref)
-			assertEqual(t, oldUrl, ref.String())
+			value := newURLValue(ref)
+			assert.Equal(t, oldUrl, ref.String())
 
 			value.Set(newUrl)
-			assertEqual(t, newUrl, ref.String())
+			assert.Equal(t, newUrl, ref.String())
 		})
 	})
 
@@ -586,7 +588,7 @@ func TestUrlValue(t *testing.T) {
 			value.Set(in)
 
 			actual := value.String()
-			assertEqual(t, expected, actual)
+			assert.Equal(t, expected, actual)
 		}
 	})
 }
