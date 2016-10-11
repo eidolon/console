@@ -1,4 +1,4 @@
-// The specification package is home to all parameter specification parsing. It includes a lexical
+// Package specification is home to all parameter specification parsing. It includes a lexical
 // scanner, and a parser for converting specification strings into Arguments or Options.
 //
 // There are two implementations of the parser, one for Arguments, and one for Options. The base

@@ -3,8 +3,8 @@ package specification_test
 import (
 	"testing"
 
-	"github.com/eidolon/console"
 	"github.com/eidolon/console/assert"
+	"github.com/eidolon/console/parameters"
 	"github.com/eidolon/console/specification"
 )
 
@@ -34,19 +34,19 @@ func TestParseOptionSpecification(t *testing.T) {
 	t.Run("should allow no value mode to be set", func(t *testing.T) {
 		option, err := specification.ParseOptionSpecification("--galaxy-quest")
 		assert.OK(t, err)
-		assert.Equal(t, console.OptionValueNone, option.ValueMode)
+		assert.Equal(t, parameters.OptionValueNone, option.ValueMode)
 	})
 
 	t.Run("should allow option values", func(t *testing.T) {
 		option, err := specification.ParseOptionSpecification("--galaxy-quest-2[=ALAN_RICKMAN]")
 		assert.OK(t, err)
-		assert.Equal(t, console.OptionValueOptional, option.ValueMode)
+		assert.Equal(t, parameters.OptionValueOptional, option.ValueMode)
 	})
 
 	t.Run("should allow required values", func(t *testing.T) {
 		option, err := specification.ParseOptionSpecification("--galaxy-quest=ALAN_RICKMAN")
 		assert.OK(t, err)
-		assert.Equal(t, console.OptionValueRequired, option.ValueMode)
+		assert.Equal(t, parameters.OptionValueRequired, option.ValueMode)
 	})
 
 	t.Run("should error when given an invalid long option name", func(t *testing.T) {

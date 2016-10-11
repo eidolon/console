@@ -1,4 +1,4 @@
-// The assert package providers some simple but powerful testing helpers. These helpers are tested,
+// Package assert provides some simple but powerful testing helpers. These helpers are tested,
 // and those tests do not use the helpers themselves (they are the only tests in the console library
 // that don't use these helpers).
 //

@@ -3,11 +3,11 @@ package specification
 import (
 	"strings"
 
-	"github.com/eidolon/console"
+	"github.com/eidolon/console/parameters"
 )
 
 // ParseOptionSpecification parses an option spec string and produces an Option.
-func ParseOptionSpecification(spec string) (console.Option, error) {
+func ParseOptionSpecification(spec string) (parameters.Option, error) {
 	scanner := NewScanner(strings.NewReader(spec))
 	parser := newOptionSpecifcationParser(scanner)
 
@@ -31,8 +31,8 @@ func newOptionSpecifcationParser(scanner *Scanner) *optionSpecificationParser {
 }
 
 // parse takes a spec string, and turns parses it into an Option.
-func (p *optionSpecificationParser) parse() (console.Option, error) {
-	var option console.Option
+func (p *optionSpecificationParser) parse() (parameters.Option, error) {
+	var option parameters.Option
 
 	for {
 		tok, lit := p.scan()
@@ -61,10 +61,10 @@ func (p *optionSpecificationParser) parse() (console.Option, error) {
 
 		// Handle opening bracket
 		if tok == LBRACK {
-			option.ValueMode = console.OptionValueOptional
+			option.ValueMode = parameters.OptionValueOptional
 			deep = true
 		} else {
-			option.ValueMode = console.OptionValueRequired
+			option.ValueMode = parameters.OptionValueRequired
 			p.unscan()
 		}
 
@@ -84,7 +84,7 @@ func (p *optionSpecificationParser) parse() (console.Option, error) {
 			}
 		}
 	} else {
-		option.ValueMode = console.OptionValueNone
+		option.ValueMode = parameters.OptionValueNone
 	}
 
 	if tok, lit := p.scan(); tok != EOF {

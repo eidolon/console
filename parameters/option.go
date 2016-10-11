@@ -1,4 +1,4 @@
-package console
+package parameters
 
 // Option value modes.
 const (
@@ -17,7 +17,7 @@ type Option struct {
 	// The description of this option.
 	Description string
 	// The value that this option references.
-	Value ParameterValue
+	Value Value
 	// Does this option take a value? Is it optional, or required?
 	ValueMode OptionValueMode
 	// The name of the value (shown in contextual help).

@@ -3,11 +3,11 @@ package specification
 import (
 	"strings"
 
-	"github.com/eidolon/console"
+	"github.com/eidolon/console/parameters"
 )
 
 // ParseArgumentSpecification parses an argument spec string and produces an Argument.
-func ParseArgumentSpecification(spec string) (console.Argument, error) {
+func ParseArgumentSpecification(spec string) (parameters.Argument, error) {
 	scanner := NewScanner(strings.NewReader(spec))
 	parser := newArgumentSpecifcationParser(scanner)
 
@@ -31,8 +31,8 @@ func newArgumentSpecifcationParser(scanner *Scanner) *argumentSpecifcationParser
 }
 
 // Parse takes a specification string, and turns parses it into an Argument.
-func (p *argumentSpecifcationParser) parse() (console.Argument, error) {
-	var argument console.Argument
+func (p *argumentSpecifcationParser) parse() (parameters.Argument, error) {
+	var argument parameters.Argument
 	var deep bool
 
 	if tok, _ := p.scan(); tok == LBRACK {

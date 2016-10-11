@@ -1,4 +1,4 @@
-package console
+package parameters
 
 // Argument provides the internal representation of an input argument paremeter.
 type Argument struct {
@@ -7,7 +7,7 @@ type Argument struct {
 	// The description of this argument.
 	Description string
 	// The value that this argument references.
-	Value ParameterValue
+	Value Value
 	// Is this argument required?
 	Required bool
 }
