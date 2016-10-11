@@ -1,4 +1,4 @@
-package parameters
+package parameters_test
 
 import (
 	"net"
@@ -7,15 +7,16 @@ import (
 	"time"
 
 	"github.com/eidolon/console/assert"
+	"github.com/eidolon/console/parameters"
 )
 
 func TestBoolValue(t *testing.T) {
-	t.Run("newBoolValue()", func(t *testing.T) {
+	t.Run("NewBoolValue()", func(t *testing.T) {
 		truthy := true
 		falsey := false
 
-		truthyValue := NewBoolValue(&truthy)
-		falseyValue := NewBoolValue(&falsey)
+		truthyValue := parameters.NewBoolValue(&truthy)
+		falseyValue := parameters.NewBoolValue(&falsey)
 
 		assert.Equal(t, truthyValue.String(), "true")
 		assert.Equal(t, falseyValue.String(), "false")
@@ -23,7 +24,7 @@ func TestBoolValue(t *testing.T) {
 
 	t.Run("Set()", func(t *testing.T) {
 		t.Run("should not error for valid values", func(t *testing.T) {
-			var value BoolValue
+			var value parameters.BoolValue
 
 			valid := []string{
 				"1",
@@ -47,7 +48,7 @@ func TestBoolValue(t *testing.T) {
 		})
 
 		t.Run("should error for invalid values", func(t *testing.T) {
-			var value BoolValue
+			var value parameters.BoolValue
 
 			invalid := []string{
 				"",
@@ -65,7 +66,7 @@ func TestBoolValue(t *testing.T) {
 
 		t.Run("should modify the bool that it references", func(t *testing.T) {
 			ref := true
-			value := NewBoolValue(&ref)
+			value := parameters.NewBoolValue(&ref)
 
 			assert.Equal(t, true, ref)
 
@@ -94,7 +95,7 @@ func TestBoolValue(t *testing.T) {
 		}
 
 		for in, expected := range inOut {
-			value := new(BoolValue)
+			value := new(parameters.BoolValue)
 			value.Set(in)
 
 			actual := value.String()
@@ -103,23 +104,23 @@ func TestBoolValue(t *testing.T) {
 	})
 
 	t.Run("FlagValue()", func(t *testing.T) {
-		var value BoolValue
+		var value parameters.BoolValue
 
 		assert.Equal(t, "true", value.FlagValue())
 	})
 }
 
 func TestDurationValue(t *testing.T) {
-	t.Run("newDurationValue()", func(t *testing.T) {
+	t.Run("NewDurationValue()", func(t *testing.T) {
 		duration := time.Second
-		durationValue := NewDurationValue(&duration)
+		durationValue := parameters.NewDurationValue(&duration)
 
 		assert.Equal(t, "1s", durationValue.String())
 	})
 
 	t.Run("Set()", func(t *testing.T) {
 		t.Run("should not error for valid values", func(t *testing.T) {
-			var value DurationValue
+			var value parameters.DurationValue
 
 			valid := []string{
 				"5us",
@@ -138,7 +139,7 @@ func TestDurationValue(t *testing.T) {
 		})
 
 		t.Run("should error for invalid values", func(t *testing.T) {
-			var value DurationValue
+			var value parameters.DurationValue
 
 			invalid := []string{
 				"",
@@ -155,7 +156,7 @@ func TestDurationValue(t *testing.T) {
 
 		t.Run("should modify the bool that it references", func(t *testing.T) {
 			ref := time.Second
-			value := NewDurationValue(&ref)
+			value := parameters.NewDurationValue(&ref)
 
 			assert.Equal(t, time.Second, ref)
 
@@ -179,7 +180,7 @@ func TestDurationValue(t *testing.T) {
 		}
 
 		for in, expected := range inOut {
-			value := new(DurationValue)
+			value := new(parameters.DurationValue)
 			value.Set(in)
 
 			actual := value.String()
@@ -189,16 +190,16 @@ func TestDurationValue(t *testing.T) {
 }
 
 func TestFloat32Value(t *testing.T) {
-	t.Run("newFloat32Value()", func(t *testing.T) {
+	t.Run("NewFloat32Value()", func(t *testing.T) {
 		float := float32(3.14)
-		floatValue := NewFloat32Value(&float)
+		floatValue := parameters.NewFloat32Value(&float)
 
 		assert.Equal(t, "3.14", floatValue.String())
 	})
 
 	t.Run("Set()", func(t *testing.T) {
 		t.Run("should not error for valid values", func(t *testing.T) {
-			var value Float32Value
+			var value parameters.Float32Value
 
 			valid := []string{
 				"3",
@@ -214,7 +215,7 @@ func TestFloat32Value(t *testing.T) {
 		})
 
 		t.Run("should error for invalid values", func(t *testing.T) {
-			var value Float32Value
+			var value parameters.Float32Value
 
 			invalid := []string{
 				"",
@@ -230,7 +231,7 @@ func TestFloat32Value(t *testing.T) {
 
 		t.Run("should modify the float32 that it references", func(t *testing.T) {
 			ref := float32(3.14)
-			value := NewFloat32Value(&ref)
+			value := parameters.NewFloat32Value(&ref)
 
 			assert.Equal(t, float32(3.14), ref)
 
@@ -251,7 +252,7 @@ func TestFloat32Value(t *testing.T) {
 		}
 
 		for in, expected := range inOut {
-			value := new(Float32Value)
+			value := new(parameters.Float32Value)
 			value.Set(in)
 
 			actual := value.String()
@@ -261,16 +262,16 @@ func TestFloat32Value(t *testing.T) {
 }
 
 func TestFloat64Value(t *testing.T) {
-	t.Run("newFloat64Value()", func(t *testing.T) {
+	t.Run("NewFloat64Value()", func(t *testing.T) {
 		float := float64(3.14)
-		floatValue := NewFloat64Value(&float)
+		floatValue := parameters.NewFloat64Value(&float)
 
 		assert.Equal(t, "3.14", floatValue.String())
 	})
 
 	t.Run("Set()", func(t *testing.T) {
 		t.Run("should not error for valid values", func(t *testing.T) {
-			var value Float64Value
+			var value parameters.Float64Value
 
 			valid := []string{
 				"3",
@@ -286,7 +287,7 @@ func TestFloat64Value(t *testing.T) {
 		})
 
 		t.Run("should error for invalid values", func(t *testing.T) {
-			var value Float64Value
+			var value parameters.Float64Value
 
 			invalid := []string{
 				"",
@@ -302,7 +303,7 @@ func TestFloat64Value(t *testing.T) {
 
 		t.Run("should modify the float64 that it references", func(t *testing.T) {
 			ref := float64(3.14)
-			value := NewFloat64Value(&ref)
+			value := parameters.NewFloat64Value(&ref)
 
 			assert.Equal(t, float64(3.14), ref)
 
@@ -323,7 +324,7 @@ func TestFloat64Value(t *testing.T) {
 		}
 
 		for in, expected := range inOut {
-			value := new(Float64Value)
+			value := new(parameters.Float64Value)
 			value.Set(in)
 
 			actual := value.String()
@@ -333,16 +334,16 @@ func TestFloat64Value(t *testing.T) {
 }
 
 func TestIntValue(t *testing.T) {
-	t.Run("newIntValue()", func(t *testing.T) {
+	t.Run("NewIntValue()", func(t *testing.T) {
 		intRef := 3
-		intValue := NewIntValue(&intRef)
+		intValue := parameters.NewIntValue(&intRef)
 
 		assert.Equal(t, "3", intValue.String())
 	})
 
 	t.Run("Set()", func(t *testing.T) {
 		t.Run("should not error for valid values", func(t *testing.T) {
-			var value Float64Value
+			var value parameters.Float64Value
 
 			valid := []string{
 				"3",
@@ -358,7 +359,7 @@ func TestIntValue(t *testing.T) {
 		})
 
 		t.Run("should error for invalid values", func(t *testing.T) {
-			var value IntValue
+			var value parameters.IntValue
 
 			invalid := []string{
 				"",
@@ -375,7 +376,7 @@ func TestIntValue(t *testing.T) {
 
 		t.Run("should modify the int that it references", func(t *testing.T) {
 			ref := 5
-			value := NewIntValue(&ref)
+			value := parameters.NewIntValue(&ref)
 
 			assert.Equal(t, 5, ref)
 
@@ -395,7 +396,7 @@ func TestIntValue(t *testing.T) {
 		}
 
 		for in, expected := range inOut {
-			value := new(IntValue)
+			value := new(parameters.IntValue)
 			value.Set(in)
 
 			actual := value.String()
@@ -405,16 +406,16 @@ func TestIntValue(t *testing.T) {
 }
 
 func TestIPValue(t *testing.T) {
-	t.Run("newIPValue()", func(t *testing.T) {
+	t.Run("NewIPValue()", func(t *testing.T) {
 		ipRef := net.ParseIP("127.0.0.1")
-		ipValue := NewIPValue(&ipRef)
+		ipValue := parameters.NewIPValue(&ipRef)
 
 		assert.Equal(t, "127.0.0.1", ipValue.String())
 	})
 
 	t.Run("Set()", func(t *testing.T) {
 		t.Run("should not error for valid values", func(t *testing.T) {
-			var value IPValue
+			var value parameters.IPValue
 
 			valid := []string{
 				"127.0.0.1",
@@ -432,7 +433,7 @@ func TestIPValue(t *testing.T) {
 		})
 
 		t.Run("should error for invalid values", func(t *testing.T) {
-			var value IPValue
+			var value parameters.IPValue
 
 			invalid := []string{
 				"",
@@ -450,7 +451,7 @@ func TestIPValue(t *testing.T) {
 
 		t.Run("should modify the IP that it references", func(t *testing.T) {
 			ref := net.ParseIP("127.0.0.1")
-			value := NewIPValue(&ref)
+			value := parameters.NewIPValue(&ref)
 
 			assert.Equal(t, value.String(), ref.String())
 
@@ -470,7 +471,7 @@ func TestIPValue(t *testing.T) {
 		}
 
 		for in, expected := range inOut {
-			value := new(IPValue)
+			value := new(parameters.IPValue)
 			value.Set(in)
 
 			actual := value.String()
@@ -480,16 +481,16 @@ func TestIPValue(t *testing.T) {
 }
 
 func TestStringValue(t *testing.T) {
-	t.Run("newStringValue()", func(t *testing.T) {
+	t.Run("NewStringValue()", func(t *testing.T) {
 		expected := "Hello, World!"
-		actual := NewStringValue(&expected)
+		actual := parameters.NewStringValue(&expected)
 
 		assert.Equal(t, expected, actual.String())
 	})
 
 	t.Run("Set()", func(t *testing.T) {
 		t.Run("should not error for valid values", func(t *testing.T) {
-			var value StringValue
+			var value parameters.StringValue
 
 			valid := []string{
 				"Hello",
@@ -508,7 +509,7 @@ func TestStringValue(t *testing.T) {
 		t.Run("should modify the string that it references", func(t *testing.T) {
 			ref := "Hello"
 
-			value := NewStringValue(&ref)
+			value := parameters.NewStringValue(&ref)
 			assert.Equal(t, "Hello", ref)
 
 			value.Set("World")
@@ -525,7 +526,7 @@ func TestStringValue(t *testing.T) {
 		}
 
 		for in, expected := range inOut {
-			value := new(StringValue)
+			value := new(parameters.StringValue)
 			value.Set(in)
 
 			actual := value.String()
@@ -535,19 +536,19 @@ func TestStringValue(t *testing.T) {
 }
 
 func TestUrlValue(t *testing.T) {
-	t.Run("newURLValue()", func(t *testing.T) {
+	t.Run("NewURLValue()", func(t *testing.T) {
 		expected := "https://www.google.co.uk/"
 
 		actual, err := url.Parse(expected)
 		assert.OK(t, err)
 
-		actualValue := NewURLValue(actual)
+		actualValue := parameters.NewURLValue(actual)
 		assert.Equal(t, expected, actualValue.String())
 	})
 
 	t.Run("Set()", func(t *testing.T) {
 		t.Run("should not error for valid values", func(t *testing.T) {
-			var value URLValue
+			var value parameters.URLValue
 
 			valid := []string{
 				"https://www.google.co.uk/",
@@ -568,7 +569,7 @@ func TestUrlValue(t *testing.T) {
 			ref, err := url.Parse(oldURL)
 			assert.OK(t, err)
 
-			value := NewURLValue(ref)
+			value := parameters.NewURLValue(ref)
 			assert.Equal(t, oldURL, ref.String())
 
 			value.Set(newURL)
@@ -584,7 +585,7 @@ func TestUrlValue(t *testing.T) {
 		}
 
 		for in, expected := range inOut {
-			value := new(URLValue)
+			value := new(parameters.URLValue)
 			value.Set(in)
 
 			actual := value.String()
