@@ -1,7 +1,7 @@
 package console
 
 // ConfigureFunc is a function to mutate the input definition to add arguments and options.
-//type ConfigureFunc func(*Definition)
+type ConfigureFunc func(*Definition)
 
 // ExecuteFunc is a function to perform whatever task this command does.
 type ExecuteFunc func() error
@@ -15,7 +15,7 @@ type Command struct {
 	// Help message for the command.
 	Help string
 	// Function to configure command-level parameters.
-	//Configure ConfigureFunc
+	Configure ConfigureFunc
 	// Function to execute when this command is requested.
 	Execute ExecuteFunc
 }
