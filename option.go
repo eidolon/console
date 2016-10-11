@@ -1,12 +1,14 @@
 package console
 
+// Option value modes.
 const (
-	optionValueNone = iota - 1
-	optionValueOptional
-	optionValueRequired
+	OptionValueNone OptionValueMode = iota - 1
+	OptionValueOptional
+	OptionValueRequired
 )
 
-type optionValueMode int
+// OptionValueMode represents the different potential requirements of an option's value.
+type OptionValueMode int
 
 // Option provides the internal representation of an input option paremeter.
 type Option struct {
@@ -17,7 +19,7 @@ type Option struct {
 	// The value that this option references.
 	Value ParameterValue
 	// Does this option take a value? Is it optional, or required?
-	ValueMode optionValueMode
+	ValueMode OptionValueMode
 	// The name of the value (shown in contextual help).
 	ValueName string
 }

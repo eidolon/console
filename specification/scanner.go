@@ -6,12 +6,13 @@ import (
 	"unicode"
 )
 
-// lexeme identifies a type of lexical token.
+// Token identifies a type of lexical token.
 type Token int
 
 // eof represents the end of input.
 const eof = rune(0)
 
+// The possible token types.
 const (
 	ILLEGAL Token = iota
 	EOF

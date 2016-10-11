@@ -562,17 +562,17 @@ func TestUrlValue(t *testing.T) {
 		})
 
 		t.Run("should modify the URL that it references", func(t *testing.T) {
-			oldUrl := "https://www.google.co.uk/"
-			newUrl := "https://www.elliotdwright.com/"
+			oldURL := "https://www.google.co.uk/"
+			newURL := "https://www.elliotdwright.com/"
 
-			ref, err := url.Parse(oldUrl)
+			ref, err := url.Parse(oldURL)
 			assert.OK(t, err)
 
 			value := newURLValue(ref)
-			assert.Equal(t, oldUrl, ref.String())
+			assert.Equal(t, oldURL, ref.String())
 
-			value.Set(newUrl)
-			assert.Equal(t, newUrl, ref.String())
+			value.Set(newURL)
+			assert.Equal(t, newURL, ref.String())
 		})
 	})
 

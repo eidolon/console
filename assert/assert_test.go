@@ -1,9 +1,8 @@
 package assert_test
 
 import (
-	"testing"
-
 	"errors"
+	"testing"
 
 	"github.com/eidolon/console/assert"
 )
