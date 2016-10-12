@@ -20,7 +20,7 @@ type InputOption struct {
 	Value string
 }
 
-// @todo: Input:
+// @todo: Input (low priority):
 // @todo: - Add method for retrieving argument by index.
 // @todo: - Add method for retrieving option by name.
 // @todo: - Add method for retrieving option by names (first matching).
