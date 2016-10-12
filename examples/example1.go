@@ -19,7 +19,7 @@ func main() {
 		Configure: func(definition *console.Definition) {
 			definition.AddOption(
 				parameters.NewStringValue(&name),
-				"-n, --name[=NAME]",
+				"-n, --name=NAME",
 				"Provide a name for the greeting.",
 			)
 		},
