@@ -4,6 +4,7 @@ package console
 // be passed to capture output in an easy to test manner.
 type Output struct{}
 
+// NewOutput creates a new Output.
 func NewOutput() *Output {
 	return &Output{}
 }
