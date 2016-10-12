@@ -60,13 +60,12 @@ func (a *Application) Run(params []string) int {
 	// Create input and output.
 	input := ParseInput(params)
 	output := Output{}
+	definition := NewDefinition()
 
 	// Assign input to application.
 	a.input = input
 
 	command := a.findCommandInInput()
-	definition := NewDefinition()
-
 	if command != nil && command.Configure != nil {
 		command.Configure(definition)
 	}
