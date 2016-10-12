@@ -59,7 +59,7 @@ func (a *Application) hasHelpOption() bool {
 func (a *Application) Run(params []string) int {
 	// Create input and output.
 	input := ParseInput(params)
-	output := NewOutput()
+	output := NewOutput(a.Writer)
 	definition := NewDefinition()
 
 	// Assign input to application.

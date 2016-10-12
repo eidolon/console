@@ -1,12 +1,18 @@
 package console
 
+import "io"
+
 // Output abstracts application output. This is mainly useful for testing, as a different writer can
 // be passed to capture output in an easy to test manner.
-type Output struct{}
+type Output struct {
+	writer io.Writer
+}
 
 // NewOutput creates a new Output.
-func NewOutput() *Output {
-	return &Output{}
+func NewOutput(writer io.Writer) *Output {
+	return &Output{
+		writer: writer,
+	}
 }
 
 // @todo: Output (low priority):
