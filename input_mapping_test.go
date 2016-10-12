@@ -9,7 +9,7 @@ import (
 )
 
 func TestMapInput(t *testing.T) {
-	createInput := func(params []string) console.Input {
+	createInput := func(params []string) *console.Input {
 		return console.ParseInput(params)
 	}
 
@@ -26,7 +26,7 @@ func TestMapInput(t *testing.T) {
 		definition.AddArgument(parameters.NewStringValue(&s1), "S1", "")
 		definition.AddArgument(parameters.NewStringValue(&s2), "S2", "")
 
-		err := console.MapInput(*definition, input)
+		err := console.MapInput(definition, input)
 		assert.OK(t, err)
 
 		assert.Equal(t, "hello", s1)
@@ -43,7 +43,7 @@ func TestMapInput(t *testing.T) {
 		definition := console.NewDefinition()
 		definition.AddArgument(parameters.NewIntValue(&i1), "I1", "")
 
-		err := console.MapInput(*definition, input)
+		err := console.MapInput(definition, input)
 		assert.NotOK(t, err)
 	})
 
@@ -60,7 +60,7 @@ func TestMapInput(t *testing.T) {
 		definition.AddArgument(parameters.NewStringValue(&s1), "S1", "")
 		definition.AddArgument(parameters.NewStringValue(&s1), "S2", "")
 
-		err := console.MapInput(*definition, input)
+		err := console.MapInput(definition, input)
 		assert.NotOK(t, err)
 	})
 
@@ -77,7 +77,7 @@ func TestMapInput(t *testing.T) {
 		definition.AddArgument(parameters.NewStringValue(&s1), "S1", "")
 		definition.AddArgument(parameters.NewStringValue(&s1), "[S2]", "")
 
-		err := console.MapInput(*definition, input)
+		err := console.MapInput(definition, input)
 		assert.OK(t, err)
 
 		assert.Equal(t, "foo", s1)
@@ -97,7 +97,7 @@ func TestMapInput(t *testing.T) {
 		definition.AddOption(parameters.NewStringValue(&s1), "-a=S1", "")
 		definition.AddOption(parameters.NewStringValue(&s2), "-b=S2", "")
 
-		err := console.MapInput(*definition, input)
+		err := console.MapInput(definition, input)
 		assert.OK(t, err)
 
 		assert.Equal(t, "foo", s1)
@@ -117,7 +117,7 @@ func TestMapInput(t *testing.T) {
 		definition.AddOption(parameters.NewStringValue(&s1), "--foo=S1", "")
 		definition.AddOption(parameters.NewStringValue(&s2), "--baz=S2", "")
 
-		err := console.MapInput(*definition, input)
+		err := console.MapInput(definition, input)
 		assert.OK(t, err)
 
 		assert.Equal(t, "bar", s1)
@@ -132,7 +132,7 @@ func TestMapInput(t *testing.T) {
 		definition := console.NewDefinition()
 		definition.AddOption(parameters.NewStringValue(&s2), "--baz=S2", "")
 
-		err := console.MapInput(*definition, input)
+		err := console.MapInput(definition, input)
 		assert.OK(t, err)
 	})
 
@@ -144,7 +144,7 @@ func TestMapInput(t *testing.T) {
 		definition := console.NewDefinition()
 		definition.AddOption(parameters.NewStringValue(&s1), "--foo=s1", "")
 
-		err := console.MapInput(*definition, input)
+		err := console.MapInput(definition, input)
 		assert.NotOK(t, err)
 	})
 
@@ -156,7 +156,7 @@ func TestMapInput(t *testing.T) {
 		definition := console.NewDefinition()
 		definition.AddOption(parameters.NewStringValue(&s1), "--foo=s1", "")
 
-		err := console.MapInput(*definition, input)
+		err := console.MapInput(definition, input)
 		assert.NotOK(t, err)
 	})
 
@@ -170,7 +170,7 @@ func TestMapInput(t *testing.T) {
 		definition := console.NewDefinition()
 		definition.AddOption(parameters.NewBoolValue(&b1), "--foo", "")
 
-		err := console.MapInput(*definition, input)
+		err := console.MapInput(definition, input)
 		assert.OK(t, err)
 
 		assert.Equal(t, true, b1)
@@ -186,7 +186,7 @@ func TestMapInput(t *testing.T) {
 		definition := console.NewDefinition()
 		definition.AddOption(parameters.NewIntValue(&i1), "--foo=I1", "")
 
-		err := console.MapInput(*definition, input)
+		err := console.MapInput(definition, input)
 		assert.NotOK(t, err)
 	})
 }

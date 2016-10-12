@@ -23,7 +23,7 @@ func main() {
 				"Provide a name for the greeting.",
 			)
 		},
-		Execute: func(input console.Input, output console.Output) error {
+		Execute: func(input *console.Input, output *console.Output) error {
 			fmt.Printf("Hello, %s!\n", name)
 			return nil
 		},

@@ -4,7 +4,7 @@ package console
 type ConfigureFunc func(*Definition)
 
 // ExecuteFunc is a function to perform whatever task this command does.
-type ExecuteFunc func(input Input, output Output) error
+type ExecuteFunc func(input *Input, output *Output) error
 
 // Command represents a command to run in an application.
 type Command struct {

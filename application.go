@@ -31,7 +31,7 @@ type Application struct {
 	// Show help?
 	help bool
 	// Application input.
-	input Input
+	input *Input
 }
 
 // NewApplication creates a new Application with some sane defaults.
@@ -78,7 +78,7 @@ func (a *Application) Run(params []string) int {
 		return 2
 	}
 
-	err := MapInput(*definition, input)
+	err := MapInput(definition, input)
 	if err != nil {
 		fmt.Fprintln(a.Writer, err)
 		fmt.Fprintln(a.Writer, fmt.Sprintf("Try '%s --help' for more information.", a.UsageName))

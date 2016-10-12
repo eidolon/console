@@ -7,7 +7,7 @@ import (
 )
 
 // MapInput maps the values of input to their corresponding reference values.
-func MapInput(definition Definition, input Input) error {
+func MapInput(definition *Definition, input *Input) error {
 	if err := mapArguments(definition.Arguments(), input); err != nil {
 		return err
 	}
@@ -20,7 +20,7 @@ func MapInput(definition Definition, input Input) error {
 }
 
 // mapArguments maps the values of input arguments to their corresponding references.
-func mapArguments(args []parameters.Argument, input Input) error {
+func mapArguments(args []parameters.Argument, input *Input) error {
 	var unmappedArguments []parameters.Argument
 
 	for i, arg := range args {
@@ -46,7 +46,7 @@ func mapArguments(args []parameters.Argument, input Input) error {
 }
 
 // mapOptions maps the values of input options to their corresponding references.
-func mapOptions(opts []parameters.Option, input Input) error {
+func mapOptions(opts []parameters.Option, input *Input) error {
 	for _, opt := range opts {
 		inputOpt := findOptionInInput(opt, input)
 
@@ -79,7 +79,7 @@ func mapOptions(opts []parameters.Option, input Input) error {
 }
 
 // findOptionInInput finds a given option in the given parsed raw input.
-func findOptionInInput(opt parameters.Option, input Input) *InputOption {
+func findOptionInInput(opt parameters.Option, input *Input) *InputOption {
 	inputOptions := make(map[string]InputOption)
 
 	for _, inputOption := range input.Options {

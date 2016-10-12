@@ -4,7 +4,7 @@ import "strings"
 
 // ParseInput takes an array of strings (typically arguments to the application), and parses them
 // into the raw Input type.
-func ParseInput(params []string) Input {
+func ParseInput(params []string) *Input {
 	var result Input
 
 	processOptions := true
@@ -28,7 +28,7 @@ func ParseInput(params []string) Input {
 		}
 	}
 
-	return result
+	return &result
 }
 
 // parseOption parses an input option with the given prefix (e.g. '-', or '--').
