@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"io"
+	"strings"
 	"testing"
 
 	"github.com/eidolon/console"
@@ -64,7 +65,37 @@ func TestApplication(t *testing.T) {
 			assert.Equal(t, 100, code)
 		})
 
-		// @todo: Test here for showing help output when descriptors are in.
+		t.Run("should show application help if the help flag is set", func(t *testing.T) {
+			writer := bytes.Buffer{}
+			application := createApplication(&writer)
+			application.Run([]string{"--help"})
+
+			output := writer.String()
+			containsUsage := strings.Contains(output, "USAGE:")
+			containsArguments := strings.Contains(output, "ARGUMENTS:")
+			containsOptions := strings.Contains(output, "OPTIONS:")
+			containsHelp := containsUsage && containsOptions && !containsArguments
+
+			assert.True(t, containsHelp, "Expected help output.")
+		})
+
+		t.Run("should show command help if the help flag is set when running a command", func(t *testing.T) {
+			var a string
+			var b int
+
+			writer := bytes.Buffer{}
+			application := createApplication(&writer)
+			application.AddCommand(createTestCommand(&a, &b))
+			application.Run([]string{"test", "--help"})
+
+			output := writer.String()
+			containsUsage := strings.Contains(output, "USAGE:")
+			containsArguments := strings.Contains(output, "ARGUMENTS:")
+			containsOptions := strings.Contains(output, "OPTIONS:")
+			containsHelp := containsUsage && containsOptions && containsArguments
+
+			assert.True(t, containsHelp, "Expected help output.")
+		})
 
 		t.Run("should return exit code 0 if a command was found, and ran OK", func(t *testing.T) {
 			var a string
@@ -105,6 +136,23 @@ func TestApplication(t *testing.T) {
 			code := application.Run([]string{"test", "aval", "--int-opt=hello"})
 
 			assert.Equal(t, 102, code)
+		})
+
+		t.Run("should configure the application definition", func(t *testing.T) {
+			var a string
+			var b int
+			var foo string
+
+			writer := bytes.Buffer{}
+			application := createApplication(&writer)
+			application.Configure = func(definition *console.Definition) {
+				definition.AddOption(parameters.NewStringValue(&foo), "--foo=FOO", "")
+			}
+
+			application.AddCommand(createTestCommand(&a, &b))
+			application.Run([]string{"test", "aval", "--foo=bar"})
+
+			assert.Equal(t, "bar", foo)
 		})
 	})
 
