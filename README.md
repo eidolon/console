@@ -4,7 +4,7 @@ Facilitates the process of creating complex command-line applications in Go.
 
 ## Usage
 
-You can see usage examples in the `examples/` folder in this repository.
+You can see usage examples in the `_examples/` folder in this repository.
 
 ## Motivation
 

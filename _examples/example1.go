@@ -8,6 +8,7 @@ import (
 )
 
 var name = "World"
+var favNum int
 
 func main() {
 	application := console.NewApplication("eidolon/console", "0.1.0")
@@ -21,9 +22,16 @@ func main() {
 				"-n, --name=NAME",
 				"Provide a name for the greeting.",
 			)
+
+			definition.AddArgument(
+				parameters.NewIntValue(&favNum),
+				"FAVOURITE_NUMBER",
+				"Provide your favourite number.",
+			)
 		},
 		Execute: func(input *console.Input, output *console.Output) error {
 			output.Printf("Hello, %s!\n", name)
+			output.Printf("Your favourite number is %d.\n", favNum)
 			return nil
 		},
 	})
