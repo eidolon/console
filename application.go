@@ -4,6 +4,8 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+
+	"github.com/eidolon/console/parameters"
 )
 
 // Application represents the heart of the console application. It is what orchestrates running
@@ -22,11 +24,11 @@ type Application struct {
 	Help string
 	// Array of commands that can be run. May contain sub-commands.
 	Commands []Command
+	// Function to configure application-level parameters, realistically should just be options.
+	Configure ConfigureFunc
 	// Writer to write output to.
 	Writer io.Writer
 
-	// Show help?
-	help bool
 	// Application input.
 	input *Input
 }
@@ -41,7 +43,7 @@ func NewApplication(name string, version string) *Application {
 	}
 }
 
-// Run the configured application, with the given input.
+// Run runs the configured application, with the given input.
 func (a *Application) Run(params []string) int {
 	// Create input and output.
 	input := ParseInput(params)
@@ -50,19 +52,24 @@ func (a *Application) Run(params []string) int {
 
 	// Assign input to application.
 	a.input = input
+	a.preConfigure(definition)
+
+	if a.Configure != nil {
+		// Similar to a.preConfigure, this is useful for customising application-level help text.
+		// This however will work just like a command's Configure function.
+		a.Configure(definition)
+
+		// Throw away any defined arguments, as they cannot be used, and will disrupt help text.
+		definition.arguments = make(map[string]parameters.Argument)
+	}
 
 	command := a.findCommandInInput()
 	if command != nil && command.Configure != nil {
 		command.Configure(definition)
 	}
 
-	if command == nil {
-		output.Println(input)
-	}
-
 	if a.hasHelpOption() || (command == nil || command.Execute == nil) {
-		// @todo: Use output? Check if help should be shown?
-		output.Println("Help me!")
+		a.showHelp(output, command)
 		return 100
 	}
 
@@ -118,7 +125,8 @@ func (a *Application) findCommandInInput() *Command {
 	return nil
 }
 
-// Quick check to see if a help flag is set, ignoring values. Uses raw input, not mapped input.
+// hasHelpOption checks to see if a help flag is set, ignoring values. Uses raw input, not mapped
+// input.
 func (a *Application) hasHelpOption() bool {
 	for _, opt := range a.input.Options {
 		if opt.Name == "help" {
@@ -127,4 +135,19 @@ func (a *Application) hasHelpOption() bool {
 	}
 
 	return false
+}
+
+// preConfigure configures pre-defined parameters. This is solely defined for help output.
+func (a *Application) preConfigure(definition *Definition) {
+	var help bool
+	definition.AddOption(parameters.NewBoolValue(&help), "-h, --help", "Display contextual help?")
+}
+
+// showHelp shows contextual help.
+func (a *Application) showHelp(output *Output, command *Command) {
+	if command != nil {
+		output.Println(DescribeCommand(a, command))
+	} else {
+		output.Println(DescribeApplication(a))
+	}
 }

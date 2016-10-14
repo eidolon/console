@@ -14,7 +14,8 @@ type Definition struct {
 	argumentKeys []string
 
 	// Defined options for the current application run.
-	options map[string]parameters.Option
+	options   map[string]parameters.Option
+	optionSet []parameters.Option
 }
 
 // NewDefinition creates a new Definition with sensible defaults.
@@ -39,13 +40,7 @@ func (d *Definition) Arguments() []parameters.Argument {
 
 // Options gets all of the options in this Definition.
 func (d *Definition) Options() []parameters.Option {
-	options := []parameters.Option{}
-
-	for _, option := range d.options {
-		options = append(options, option)
-	}
-
-	return options
+	return d.optionSet
 }
 
 // AddArgument creates a parameters.Argument and adds it to the Definition. Duplicate argument names
@@ -87,4 +82,6 @@ func (d *Definition) AddOption(value parameters.Value, spec string, desc string)
 
 		d.options[name] = opt
 	}
+
+	d.optionSet = append(d.optionSet, opt)
 }
