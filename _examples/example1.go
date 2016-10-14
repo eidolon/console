@@ -12,8 +12,19 @@ var favNum int
 
 func main() {
 	application := console.NewApplication("eidolon/console", "0.1.0")
+	application.Logo = `
+                                             #
+                              ###            ##
+######## ### ####### #######  ###   #######  ###  ##
+         ###       ##      ## ###         ## #### ##
+ ####### ###  ###  ## ##   ## ###    ##   ## #######
+ ###     ###  ###  ## ##   ## ###    ##   ## ### ###
+ ####### ###  ######   #####  ####### #####  ###  ##
+                                                   #
+`
+
 	application.AddCommand(console.Command{
-		Name:        "greet",
+		Name:        "greet:example",
 		Description: "Greet's the given user, or the world.",
 		Help:        "You don't have to specify a name.",
 		Configure: func(definition *console.Definition) {

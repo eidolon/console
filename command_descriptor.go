@@ -15,7 +15,7 @@ func DescribeCommand(app *Application, cmd *Command) string {
 	var help string
 
 	arguments := findCommandArguments(cmd)
-	options := findCommandOptions(cmd)
+	options := findCommandOptions(app, cmd)
 
 	help += fmt.Sprintf("%s\n", describeCommandUsage(app, cmd, arguments, options))
 
@@ -129,8 +129,14 @@ func findCommandArguments(cmd *Command) []parameters.Argument {
 }
 
 // findCommandOptions finds all of the defined options on the given application and command.
-func findCommandOptions(cmd *Command) []parameters.Option {
+func findCommandOptions(app *Application, cmd *Command) []parameters.Option {
 	definition := NewDefinition()
+
+	app.preConfigure(definition)
+
+	if app.Configure != nil {
+		app.Configure(definition)
+	}
 
 	if cmd.Configure != nil {
 		cmd.Configure(definition)

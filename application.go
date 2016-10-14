@@ -129,7 +129,7 @@ func (a *Application) findCommandInInput() *Command {
 // input.
 func (a *Application) hasHelpOption() bool {
 	for _, opt := range a.input.Options {
-		if opt.Name == "help" {
+		if opt.Name == "help" || opt.Name == "h" {
 			return true
 		}
 	}
