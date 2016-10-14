@@ -41,17 +41,6 @@ func NewApplication(name string, version string) *Application {
 	}
 }
 
-// Quick check to see if a help flag is set, ignoring values. Uses raw input, not mapped input.
-func (a *Application) hasHelpOption() bool {
-	for _, opt := range a.input.Options {
-		if opt.Name == "help" {
-			return true
-		}
-	}
-
-	return false
-}
-
 // Run the configured application, with the given input.
 func (a *Application) Run(params []string) int {
 	// Create input and output.
@@ -67,26 +56,28 @@ func (a *Application) Run(params []string) int {
 		command.Configure(definition)
 	}
 
-	noCmdExecute := command == nil || command.Execute == nil
+	if command == nil {
+		output.Println(input)
+	}
 
-	if noCmdExecute || a.hasHelpOption() {
+	if a.hasHelpOption() || (command == nil || command.Execute == nil) {
 		// @todo: Use output? Check if help should be shown?
 		output.Println("Help me!")
-		return 2
+		return 100
 	}
 
 	err := MapInput(definition, input)
 	if err != nil {
 		output.Println(err)
 		output.Printf("Try '%s --help' for more information.\n", a.UsageName)
-		return 1
+		return 101
 	}
 
 	err = command.Execute(input, output)
 	if err != nil {
 		output.Println(err)
 		output.Printf("Try '%s %s --help' for more information.\n", a.UsageName, command.Name)
-		return 1
+		return 102
 	}
 
 	return 0
@@ -125,4 +116,15 @@ func (a *Application) findCommandInInput() *Command {
 	}
 
 	return nil
+}
+
+// Quick check to see if a help flag is set, ignoring values. Uses raw input, not mapped input.
+func (a *Application) hasHelpOption() bool {
+	for _, opt := range a.input.Options {
+		if opt.Name == "help" {
+			return true
+		}
+	}
+
+	return false
 }
