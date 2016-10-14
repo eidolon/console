@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/eidolon/console"
@@ -24,7 +23,7 @@ func main() {
 			)
 		},
 		Execute: func(input *console.Input, output *console.Output) error {
-			fmt.Printf("Hello, %s!\n", name)
+			output.Printf("Hello, %s!\n", name)
 			return nil
 		},
 	})

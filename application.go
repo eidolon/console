@@ -1,7 +1,6 @@
 package console
 
 import (
-	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -23,8 +22,6 @@ type Application struct {
 	Help string
 	// Array of commands that can be run. May contain sub-commands.
 	Commands []Command
-	// Function to configure application-level parameters, realistically should just be options.
-	Configure ConfigureFunc
 	// Writer to write output to.
 	Writer io.Writer
 
@@ -40,7 +37,7 @@ func NewApplication(name string, version string) *Application {
 		Name:      name,
 		UsageName: filepath.Base(os.Args[0]),
 		Version:   version,
-		Writer:    os.Stderr,
+		Writer:    os.Stdout,
 	}
 }
 
@@ -72,30 +69,23 @@ func (a *Application) Run(params []string) int {
 
 	noCmdExecute := command == nil || command.Execute == nil
 
-	if noCmdExecute {
+	if noCmdExecute || a.hasHelpOption() {
 		// @todo: Use output? Check if help should be shown?
-		fmt.Fprintln(a.Writer, "NYI")
+		output.Println("Help me!")
 		return 2
 	}
 
 	err := MapInput(definition, input)
 	if err != nil {
-		fmt.Fprintln(a.Writer, err)
-		fmt.Fprintln(a.Writer, fmt.Sprintf("Try '%s --help' for more information.", a.UsageName))
+		output.Println(err)
+		output.Printf("Try '%s --help' for more information.\n", a.UsageName)
 		return 1
 	}
 
 	err = command.Execute(input, output)
 	if err != nil {
-		fmt.Fprintln(a.Writer, err)
-		fmt.Fprintln(
-			a.Writer,
-			fmt.Sprintf(
-				"Try '%s %s --help' for more information.",
-				a.UsageName,
-				command.Name,
-			),
-		)
+		output.Println(err)
+		output.Printf("Try '%s %s --help' for more information.\n", a.UsageName, command.Name)
 		return 1
 	}
 
@@ -114,6 +104,7 @@ func (a *Application) AddCommand(command Command) {
 
 // findCommand attempts to find the command to run based on the raw input.
 func (a *Application) findCommandInInput() *Command {
+	// There can't be a command if there are no arguments!
 	if len(a.input.Arguments) == 0 {
 		return nil
 	}
