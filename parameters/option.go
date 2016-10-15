@@ -2,7 +2,7 @@ package parameters
 
 // Option value modes.
 const (
-	OptionValueNone OptionValueMode = iota - 1
+	OptionValueNone OptionValueMode = iota
 	OptionValueOptional
 	OptionValueRequired
 )

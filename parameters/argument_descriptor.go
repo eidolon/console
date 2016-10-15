@@ -60,10 +60,7 @@ func (a argumentNameSort) Len() int {
 }
 
 func (a argumentNameSort) Less(i, j int) bool {
-	l := strings.TrimLeft(a[i], "[")
-	r := strings.TrimLeft(a[j], "[")
-
-	return l < r
+	return a[i] < a[j]
 }
 
 func (a argumentNameSort) Swap(i, j int) {
