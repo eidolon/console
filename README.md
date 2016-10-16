@@ -1,4 +1,4 @@
-# Console
+# Console [![Travis Build Status][travis-badge]][travis-build]
 
 Facilitates the process of creating complex command-line applications in Go.
 
@@ -42,3 +42,6 @@ on fixing it yourself.
 
 [1]: https://github.com/eidolon/console/pulls
 [2]: https://github.com/eidolon/console/issues
+
+[travis-badge]: https://img.shields.io/travis/eidolon/console.svg
+[travis-build]: https://travis-ci.org/eidolon/console
