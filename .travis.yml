@@ -5,7 +5,6 @@ go:
 
 before_install:
 - go get -u -v github.com/golang/lint/golint
-- go get -u -v code.google.com/p/go.tools/cmd/vet
 
 install:
 - go get -u ./...
