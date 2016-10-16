@@ -22,6 +22,7 @@ configurable. Another goal of this library is to make it so that commands are ea
 I don't plan on making any BC breaking changes, and useful CLI applications can be built with the 
 existing functionality, howewever there are couple of things I have planned to improve this library.
 
+* Better usage documentation.
 * Better overall application testing. Although all of the code is covered, there are still a few 
 more tests that could be written.
 * More helpful `Input` type (but one that still maintains testability).
