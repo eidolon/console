@@ -15,7 +15,18 @@ applications.
 
 This library is designed to help make more complex, type-safe console applications, in a consistent,
 simple, and easy to use way. It's designed to be lightweight and simple, but powerful and 
-configurable. 
+configurable. Another goal of this library is to make it so that commands are easily testable.
+
+## Todo List
+
+I don't plan on making any BC breaking changes, and useful CLI applications can be built with the 
+existing functionality, howewever there are couple of things I have planned to improve this library.
+
+* Better overall application testing. Although all of the code is covered, there are still a few 
+more tests that could be written.
+* More helpful `Input` type (but one that still maintains testability).
+* Command testing helpers. Currently commands can be tested, however the tests can be a little 
+verbose. I need to plan around how I can make command tests a little easier to write.
 
 ## License
 
