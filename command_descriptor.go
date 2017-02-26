@@ -49,7 +49,7 @@ func DescribeCommands(commands []Command) string {
 
 		len := len(cmd.Name)
 
-		if len > width {
+		if len > (width-2) {
 			width = len + 2
 		}
 	}
