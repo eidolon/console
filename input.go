@@ -20,6 +20,19 @@ type InputOption struct {
 	Value string
 }
 
+// HasOption checks to see if the given option exists by one of it's names.
+func (i *Input) HasOption(names []string) bool {
+	for _, name := range names {
+		for _, option := range i.Options {
+			if option.Name == name {
+				return true
+			}
+		}
+	}
+
+	return false
+}
+
 // @todo: Input (low priority):
 // @todo: - Add method for retrieving argument by index.
 // @todo: - Add method for retrieving option by name.
