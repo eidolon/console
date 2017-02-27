@@ -50,6 +50,26 @@ func (b *BoolValue) FlagValue() string {
 	return "true"
 }
 
+// DateValue abstracts functionality for parsing input that should be represented as a time.Time.
+type DateValue time.Time
+
+// NewDateValue creates a new DateValue.
+func NewDateValue(ref *time.Time) *DateValue {
+	return (*DateValue)(ref)
+}
+
+// Set assigns a value to the value that this DateValue references.
+func (d *DateValue) Set(s string) error {
+	v, err := time.Parse("2006-01-02", s)
+	*d = DateValue(v)
+	return err
+}
+
+// String converts this DateValue to a string.
+func (d *DateValue) String() string {
+	return (*time.Time)(d).Format("2006-01-02")
+}
+
 // DurationValue abstracts functionality for parsing input that should be represented as a
 // time.Duration.
 type DurationValue time.Duration

@@ -110,6 +110,84 @@ func TestBoolValue(t *testing.T) {
 	})
 }
 
+func TestDateValue(t *testing.T) {
+	t.Run("NewDateValue()", func(t *testing.T) {
+		date, err := time.Parse("2006-01-02", "2017-02-27")
+		if err != nil {
+			t.Error(err)
+		}
+
+		dateValue := parameters.NewDateValue(&date)
+
+		assert.Equal(t, "2017-02-27", dateValue.String())
+	})
+
+	t.Run("Set()", func(t *testing.T) {
+		t.Run("should not error for valid values", func(t *testing.T) {
+			var value parameters.DateValue
+
+			valid := []string{
+				"2017-02-27",
+				"2000-12-01",
+				"0123-04-05",
+			}
+
+			for _, item := range valid {
+				err := value.Set(item)
+				assert.OK(t, err)
+			}
+		})
+
+		t.Run("should error for invalid values", func(t *testing.T) {
+			var value parameters.DateValue
+
+			invalid := []string{
+				"",
+				"hello",
+				"00:14AM",
+			}
+
+			for _, item := range invalid {
+				err := value.Set(item)
+				assert.NotOK(t, err)
+			}
+		})
+
+		t.Run("should modify the date that it references", func(t *testing.T) {
+			ref, err := time.Parse("2006-01-02", "2017-02-27")
+			if err != nil {
+				t.Error(err)
+			}
+
+			value := parameters.NewDateValue(&ref)
+
+			assert.Equal(t, "2017-02-27", ref.Format("2006-01-02"))
+
+			value.Set("2000-12-01")
+			assert.Equal(t, "2000-12-01", ref.Format("2006-01-02"))
+
+			value.Set("0123-04-05")
+			assert.Equal(t, "0123-04-05", ref.Format("2006-01-02"))
+		})
+	})
+
+	t.Run("String()", func(t *testing.T) {
+		results := []string{
+			"2017-02-27",
+			"2000-12-01",
+			"0123-04-05",
+		}
+
+		for _, result := range results {
+			value := new(parameters.DateValue)
+			value.Set(result)
+
+			actual := value.String()
+			assert.Equal(t, result, actual)
+		}
+	})
+}
+
 func TestDurationValue(t *testing.T) {
 	t.Run("NewDurationValue()", func(t *testing.T) {
 		duration := time.Second
