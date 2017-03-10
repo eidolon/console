@@ -26,3 +26,5 @@ _testmain.go
 
 _examples/*
 !_examples/*.go
+
+coverage.html

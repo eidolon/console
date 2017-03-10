@@ -22,15 +22,17 @@ type Application struct {
 	Logo string
 	// Help message for the application.
 	Help string
-	// Array of commands that can be run. May contain sub-commands.
-	Commands []Command
 	// Function to configure application-level parameters, realistically should just be options.
 	Configure ConfigureFunc
 	// Writer to write output to.
 	Writer io.Writer
 
+	// Array of commands that can be run. May contain sub-commands.
+	commands []*Command
 	// Application input.
 	input *Input
+	// The path taken to reach the current command (used for help text).
+	path []string
 }
 
 // NewApplication creates a new Application with some sane defaults.
@@ -63,13 +65,13 @@ func (a *Application) Run(params []string) int {
 		definition.arguments = make(map[string]parameters.Argument)
 	}
 
-	command := a.findCommandInInput()
+	command, path := a.findCommandInInput()
 	if command != nil && command.Configure != nil {
 		command.Configure(definition)
 	}
 
 	if a.hasHelpOption() || (command == nil || command.Execute == nil) {
-		a.showHelp(output, command)
+		a.showHelp(output, command, path)
 		return 100
 	}
 
@@ -91,38 +93,54 @@ func (a *Application) Run(params []string) int {
 }
 
 // AddCommands adds commands to the application.
-func (a *Application) AddCommands(commands []Command) {
-	a.Commands = append(a.Commands, commands...)
+func (a *Application) AddCommands(commands []*Command) {
+	a.commands = append(a.commands, commands...)
 }
 
 // AddCommand adds a command to the application.
-func (a *Application) AddCommand(command Command) {
-	a.Commands = append(a.Commands, command)
+func (a *Application) AddCommand(command *Command) {
+	a.commands = append(a.commands, command)
 }
 
-// findCommand attempts to find the command to run based on the raw input.
-func (a *Application) findCommandInInput() *Command {
-	// There can't be a command if there are no arguments!
-	if len(a.input.Arguments) == 0 {
-		return nil
-	}
+// Commands gets the subcommands on an application.
+func (a *Application) Commands() []*Command {
+	return a.commands
+}
 
-	var command *Command
-	for i, cmd := range a.Commands {
-		if cmd.Name == a.input.Arguments[0].Value {
-			command = &a.Commands[i]
-			break
+// findCommandInInput attempts to find the command to run based on the raw input.
+func (a *Application) findCommandInInput() (*Command, []string) {
+	var loop func(depth int, container CommandContainer) *Command
+	var path []string
+
+	loop = func(depth int, container CommandContainer) *Command {
+		if len(a.input.Arguments) == 0 {
+			return nil
 		}
-	}
 
-	if command != nil {
-		// Forget about the command name, the command that will be run shouldn't use it as input
-		a.input.Arguments = a.input.Arguments[1:]
+		var command *Command
+		for _, cmd := range container.Commands() {
+			if cmd.Name == a.input.Arguments[0].Value {
+				command = cmd
+				// Add to breadcrumb trail...
+				path = append(path, cmd.Name)
+				break
+			}
+		}
+
+		if command != nil {
+			a.input.Arguments = a.input.Arguments[1:]
+
+			subcommand := loop(depth+1, command)
+
+			if subcommand != nil {
+				command = subcommand
+			}
+		}
 
 		return command
 	}
 
-	return nil
+	return loop(0, a), path
 }
 
 // hasHelpOption checks to see if a help flag is set, ignoring values. Uses raw input, not mapped
@@ -144,9 +162,9 @@ func (a *Application) preConfigure(definition *Definition) {
 }
 
 // showHelp shows contextual help.
-func (a *Application) showHelp(output *Output, command *Command) {
+func (a *Application) showHelp(output *Output, command *Command, path []string) {
 	if command != nil {
-		output.Println(DescribeCommand(a, command))
+		output.Println(DescribeCommand(a, command, path))
 	} else {
 		output.Println(DescribeApplication(a))
 	}

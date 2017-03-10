@@ -7,6 +7,9 @@ import (
 	"strings"
 	"testing"
 
+	"fmt"
+	"math/rand"
+
 	"github.com/eidolon/console"
 	"github.com/eidolon/console/assert"
 	"github.com/eidolon/console/parameters"
@@ -25,8 +28,8 @@ func TestApplication(t *testing.T) {
 		return application
 	}
 
-	createTestCommand := func(a *string, b *int) console.Command {
-		return console.Command{
+	createTestCommand := func(a *string, b *int) *console.Command {
+		return &console.Command{
 			Name: "test",
 			Configure: func(definition *console.Definition) {
 				definition.AddArgument(parameters.NewStringValue(a), "STRINGARG", "")
@@ -126,7 +129,7 @@ func TestApplication(t *testing.T) {
 		t.Run("should return exit code 102 if the command execution fails", func(t *testing.T) {
 			writer := bytes.Buffer{}
 			application := createApplication(&writer)
-			application.AddCommand(console.Command{
+			application.AddCommand(&console.Command{
 				Name: "test",
 				Execute: func(input *console.Input, output *console.Output) error {
 					return errors.New("Testing errors")
@@ -154,6 +157,28 @@ func TestApplication(t *testing.T) {
 
 			assert.Equal(t, "bar", foo)
 		})
+
+		t.Run("should work with subcommands", func(t *testing.T) {
+			message := fmt.Sprintf("Subcommand: %d", rand.Int())
+
+			subcommand := console.Command{
+				Name: "subcommand",
+				Execute: func(input *console.Input, output *console.Output) error {
+					output.Println(message)
+					return nil
+				},
+			}
+
+			command := console.Command{Name: "command"}
+			command.AddCommand(&subcommand)
+
+			writer := bytes.Buffer{}
+			application := createApplication(&writer)
+			application.AddCommand(&command)
+			application.Run([]string{"command", "subcommand"})
+
+			assert.True(t, strings.Contains(writer.String(), message), "Expected subcommand to run")
+		})
 	})
 
 	t.Run("AddCommands()", func(t *testing.T) {
@@ -161,35 +186,35 @@ func TestApplication(t *testing.T) {
 			writer := bytes.Buffer{}
 			application := createApplication(&writer)
 
-			assert.Equal(t, 0, len(application.Commands))
+			assert.Equal(t, 0, len(application.Commands()))
 
-			application.AddCommands([]console.Command{
+			application.AddCommands([]*console.Command{
 				{
 					Name: "test1",
 				},
 			})
 
-			assert.Equal(t, 1, len(application.Commands))
+			assert.Equal(t, 1, len(application.Commands()))
 		})
 
 		t.Run("should work when adding no commands", func(t *testing.T) {
 			writer := bytes.Buffer{}
 			application := createApplication(&writer)
 
-			assert.Equal(t, 0, len(application.Commands))
+			assert.Equal(t, 0, len(application.Commands()))
 
-			application.AddCommands([]console.Command{})
+			application.AddCommands([]*console.Command{})
 
-			assert.Equal(t, 0, len(application.Commands))
+			assert.Equal(t, 0, len(application.Commands()))
 		})
 
 		t.Run("should work when adding more than 1 command", func(t *testing.T) {
 			writer := bytes.Buffer{}
 			application := createApplication(&writer)
 
-			assert.Equal(t, 0, len(application.Commands))
+			assert.Equal(t, 0, len(application.Commands()))
 
-			application.AddCommands([]console.Command{
+			application.AddCommands([]*console.Command{
 				{
 					Name: "test1",
 				},
@@ -201,7 +226,7 @@ func TestApplication(t *testing.T) {
 				},
 			})
 
-			assert.Equal(t, 3, len(application.Commands))
+			assert.Equal(t, 3, len(application.Commands()))
 		})
 	})
 
@@ -209,12 +234,12 @@ func TestApplication(t *testing.T) {
 		writer := bytes.Buffer{}
 		application := createApplication(&writer)
 
-		assert.Equal(t, 0, len(application.Commands))
+		assert.Equal(t, 0, len(application.Commands()))
 
-		application.AddCommand(console.Command{
+		application.AddCommand(&console.Command{
 			Name: "test1",
 		})
 
-		assert.Equal(t, 1, len(application.Commands))
+		assert.Equal(t, 1, len(application.Commands()))
 	})
 }

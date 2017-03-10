@@ -24,8 +24,8 @@ func DescribeApplication(app *Application) string {
 		help += fmt.Sprintf("\n%s", parameters.DescribeOptions(options))
 	}
 
-	if len(app.Commands) > 0 {
-		help += fmt.Sprintf("\n%s", DescribeCommands(app.Commands))
+	if len(app.commands) > 0 {
+		help += fmt.Sprintf("\n%s", DescribeCommands(app.commands))
 		help += fmt.Sprintf(
 			"\n  Run `$ %s COMMAND --help` for more information about a command.\n",
 			app.UsageName,

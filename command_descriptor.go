@@ -10,13 +10,13 @@ import (
 )
 
 // DescribeCommand describes a Command on an Application to provide usage information.
-func DescribeCommand(app *Application, cmd *Command) string {
+func DescribeCommand(app *Application, cmd *Command, path []string) string {
 	var help string
 
 	arguments := findCommandArguments(cmd)
 	options := findCommandOptions(app, cmd)
 
-	help += fmt.Sprintf("%s\n", describeCommandUsage(app, cmd, arguments, options))
+	help += fmt.Sprintf("%s\n", describeCommandUsage(app, cmd, arguments, options, path))
 
 	if len(arguments) > 0 {
 		help += fmt.Sprintf("\n%s", parameters.DescribeArguments(arguments))
@@ -24,6 +24,15 @@ func DescribeCommand(app *Application, cmd *Command) string {
 
 	if len(options) > 0 {
 		help += fmt.Sprintf("\n%s", parameters.DescribeOptions(options))
+	}
+
+	if len(cmd.commands) > 0 {
+		help += fmt.Sprintf("\n%s", DescribeCommands(cmd.commands))
+		help += fmt.Sprintf(
+			"\n  Run `$ %s %s COMMAND --help` for more information about a command.\n",
+			app.UsageName,
+			strings.Join(path, " "),
+		)
 	}
 
 	if len(cmd.Help) > 0 {
@@ -35,12 +44,12 @@ func DescribeCommand(app *Application, cmd *Command) string {
 }
 
 // DescribeCommands describes an array of Commands to provide usage information.
-func DescribeCommands(commands []Command) string {
+func DescribeCommands(commands []*Command) string {
 	desc := "COMMANDS:\n"
 
 	// Create array and map for specific output ordering.
 	cmdKeys := []string{}
-	cmdMap := make(map[string]Command)
+	cmdMap := make(map[string]*Command)
 
 	var width int
 	for _, cmd := range commands {
@@ -49,7 +58,7 @@ func DescribeCommands(commands []Command) string {
 
 		len := len(cmd.Name)
 
-		if len > (width-2) {
+		if len > (width - 2) {
 			width = len + 2
 		}
 	}
@@ -76,12 +85,12 @@ func DescribeCommands(commands []Command) string {
 }
 
 // describeCommandUsage describes a command's usage.
-func describeCommandUsage(app *Application, cmd *Command, args []parameters.Argument, opts []parameters.Option) string {
+func describeCommandUsage(app *Application, cmd *Command, args []parameters.Argument, opts []parameters.Option, path []string) string {
 	desc := "USAGE:\n"
 	desc += fmt.Sprintf(
 		"  %s %s",
 		app.UsageName,
-		cmd.Name,
+		strings.Join(path, " "),
 	)
 
 	if len(opts) > 0 {

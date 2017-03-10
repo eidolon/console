@@ -19,8 +19,8 @@ configurable. Another goal of this library is to make it so that commands are ea
 
 ## Todo List
 
-I don't plan on making any BC breaking changes, and useful CLI applications can be built with the 
-existing functionality, howewever there are couple of things I have planned to improve this library.
+Consider this library pre-v1.0. In other words, there may be backwards compatibility breaking 
+changes. If this bothers you, use vendoring.
 
 * Better usage documentation.
 * Better overall application testing. Although all of the code is covered, there are still a few 

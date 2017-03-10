@@ -1,5 +1,11 @@
 package console
 
+// CommandContainer is the interface that provides a method to get commands on an object.
+type CommandContainer interface {
+	// Commands gets commands from an object.
+	Commands() []*Command
+}
+
 // ConfigureFunc is a function to mutate the input definition to add arguments and options.
 type ConfigureFunc func(*Definition)
 
@@ -18,4 +24,26 @@ type Command struct {
 	Configure ConfigureFunc
 	// Function to execute when this command is requested.
 	Execute ExecuteFunc
+
+	// Array of subcommands. May contain sub-commands.
+	commands []*Command
+}
+
+// AddCommands adds subcommands to the command.
+func (c *Command) AddCommands(commands []*Command) *Command {
+	c.commands = append(c.commands, commands...)
+
+	return c
+}
+
+// AddCommand adds a subcommand to the command.
+func (c *Command) AddCommand(command *Command) *Command {
+	c.commands = append(c.commands, command)
+
+	return c
+}
+
+// Commands gets the subcommands on a command.
+func (c *Command) Commands() []*Command {
+	return c.commands
 }

@@ -16,7 +16,7 @@ func TestDescribeCommand(t *testing.T) {
 			Name: "test",
 		}
 
-		result := console.DescribeCommand(application, &command)
+		result := console.DescribeCommand(application, &command, []string{command.Name})
 
 		assert.True(t, strings.Contains(result, "USAGE:"), "Expected usage information.")
 	})
@@ -27,7 +27,7 @@ func TestDescribeCommand(t *testing.T) {
 			Name: "test-command-name",
 		}
 
-		result := console.DescribeCommand(application, &command)
+		result := console.DescribeCommand(application, &command, []string{command.Name})
 
 		assert.True(t, strings.Contains(result, "test-command-name"), "Expected command name.")
 	})
@@ -41,7 +41,7 @@ func TestDescribeCommand(t *testing.T) {
 			Description: description,
 		}
 
-		result := console.DescribeCommand(application, &command)
+		result := console.DescribeCommand(application, &command, []string{command.Name})
 
 		assert.True(t, strings.Contains(result, description), "Expected command description.")
 	})
@@ -55,7 +55,7 @@ func TestDescribeCommand(t *testing.T) {
 			Help: help,
 		}
 
-		result := console.DescribeCommand(application, &command)
+		result := console.DescribeCommand(application, &command, []string{command.Name})
 
 		assert.True(t, strings.Contains(result, "HELP:"), "Expected command help header.")
 		assert.True(t, strings.Contains(result, help), "Expected command help.")
@@ -74,7 +74,7 @@ func TestDescribeCommand(t *testing.T) {
 			},
 		}
 
-		result := console.DescribeCommand(application, &command)
+		result := console.DescribeCommand(application, &command, []string{command.Name})
 
 		assert.True(t, strings.Contains(result, "STRING_ARG_S1"), "Expected argument name.")
 		assert.True(t, strings.Contains(result, "STRING_ARG_S2"), "Expected argument name.")
@@ -93,7 +93,7 @@ func TestDescribeCommand(t *testing.T) {
 			},
 		}
 
-		result := console.DescribeCommand(application, &command)
+		result := console.DescribeCommand(application, &command, []string{command.Name})
 
 		assert.True(t, strings.Contains(result, "[STRING_ARG_S1]"), "Expected argument name.")
 		assert.True(t, strings.Contains(result, "[STRING_ARG_S2]"), "Expected argument name.")
@@ -115,21 +115,42 @@ func TestDescribeCommand(t *testing.T) {
 			},
 		}
 
-		result := console.DescribeCommand(application, &command)
+		result := console.DescribeCommand(application, &command, []string{command.Name})
 
 		assert.True(t, strings.Contains(result, "[OPTIONS...]"), "Expected options.")
+	})
+
+	t.Run("should show that there are subcommands if there are any", func(t *testing.T) {
+		application := console.NewApplication("eidolon/console", "1.2.3+testing")
+
+		command := console.Command{
+			Name: "test-command-name",
+		}
+
+		subCommand := console.Command{
+			Name:        "test-subcommand-name",
+			Description: "Test subcommand description.",
+		}
+
+		command.AddCommand(&subCommand)
+
+		result := console.DescribeCommand(application, &command, []string{command.Name})
+
+		assert.True(t, strings.Contains(result, "COMMANDS:"), "Expected commands")
+		assert.True(t, strings.Contains(result, subCommand.Name), "Expected subcommand name")
+		assert.True(t, strings.Contains(result, subCommand.Description), "Expected subcommand desc")
 	})
 }
 
 func TestDescribeCommands(t *testing.T) {
 	t.Run("should include a title", func(t *testing.T) {
-		result := console.DescribeCommands([]console.Command{})
+		result := console.DescribeCommands([]*console.Command{})
 
 		assert.True(t, strings.Contains(result, "COMMANDS:"), "Expected title.")
 	})
 
 	t.Run("should show all command names", func(t *testing.T) {
-		result := console.DescribeCommands([]console.Command{
+		result := console.DescribeCommands([]*console.Command{
 			{
 				Name: "foo-cmd",
 			},
@@ -146,7 +167,7 @@ func TestDescribeCommands(t *testing.T) {
 		fooCmdDesc := "The foo-cmd description is this."
 		barCmdDesc := "An alternative command description for bar-cmd."
 
-		result := console.DescribeCommands([]console.Command{
+		result := console.DescribeCommands([]*console.Command{
 			{
 				Name:        "foo-cmd",
 				Description: fooCmdDesc,
@@ -162,7 +183,7 @@ func TestDescribeCommands(t *testing.T) {
 	})
 
 	t.Run("should show the commands in alphabetical order", func(t *testing.T) {
-		result := console.DescribeCommands([]console.Command{
+		result := console.DescribeCommands([]*console.Command{
 			{
 				Name: "foo-cmd",
 			},
