@@ -5,7 +5,7 @@ set -ex
 SCRIPT_PATH="$(dirname "$0")"
 
 # Ensure we're running in the correct directory.
-pushd "$SCRIPT_PATH/../.." > /dev/null
+pushd "$SCRIPT_PATH/../../.." > /dev/null
 
 # We'll need to set the GOPATH to the current path, then set it up.
 export GOPATH=$PWD
