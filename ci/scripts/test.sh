@@ -12,7 +12,7 @@ export GOPATH=$PWD
 
 # Move code into GOPATH
 mkdir -p src/github.com/eidolon
-cp -r ./console src/github/eidolon/
+cp -r ./console src/github.com/eidolon/
 
 # Debugging Information:
 whoami
