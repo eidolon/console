@@ -1,0 +1,6 @@
+---
+repository_name: eidolon/console
+repository_url: https://github.com/eidolon/console
+
+slack_alert_url: <SLACK_ALERT_URL>
+slack_alert_channel: <SLACK_ALERT_CHANNEL>

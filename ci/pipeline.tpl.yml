@@ -9,7 +9,7 @@ resources:
 - name: slack-alert
   type: slack-notification
   source:
-    url: {{slack_alert_url}}
+    url: {{.slack_alert_url}}
 
 
 jobs:
@@ -19,17 +19,13 @@ jobs:
     trigger: true
   - task: test
     file: console/ci/tasks/test.yml
-    params:
-      REPOSITORY_NAME: {{repository_name}}
-      REPOSITORY_URL: {{repository_url}}
     on_success:
-      do:
-      - put: slack-alert
-        params:
-          channel: {{slack_alert_channel}}
-          text: >
-            Build for <https://github.com/eidolon/console|eidolon/console> succeeded. View the build
-            log at $ATC_EXTERNAL_URL/builds/$BUILD_ID
+      put: slack-alert
+      params:
+        channel: "#{{.slack_alert_channel}}"
+        text: >
+          Build for <{{.repository_url}}|{{.repository_name}}> succeeded. View the build log at
+          $ATC_EXTERNAL_URL/builds/$BUILD_ID
 
 
 resource_types:

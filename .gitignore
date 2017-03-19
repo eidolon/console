@@ -30,4 +30,5 @@ _examples/*
 coverage.html
 
 # CI
+ci/pipeline.yml
 ci/variables.yml
