@@ -8,7 +8,7 @@ image_resource:
     tag: 1.8
 
 inputs:
-- name: console-src
+- name: console
 
 run:
   path: ./console/ci/test.sh

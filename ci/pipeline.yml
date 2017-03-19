@@ -4,7 +4,7 @@ resources:
   type: git
   source:
     uri: https://github.com/eidolon/console.git
-    branch: master
+    branch: ci
 
 jobs:
 - name: test
