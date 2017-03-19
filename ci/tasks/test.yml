@@ -10,8 +10,5 @@ image_resource:
 inputs:
 - name: console
 
-outputs:
-- name: coverage-results
-
 run:
   path: ./console/ci/scripts/test.sh
