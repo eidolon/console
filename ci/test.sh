@@ -4,7 +4,7 @@ SCRIPT_PATH="$(dirname "$0")"
 
 pushd "$SCRIPT_PATH/.." > /dev/null
 
-export GOPATH=$PWD/console-src
+export GOPATH=$PWD/console
 
 set -ex
 

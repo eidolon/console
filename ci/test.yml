@@ -11,4 +11,4 @@ inputs:
 - name: console-src
 
 run:
-  path: ./console-src/ci/build.sh
+  path: ./console/ci/test.sh
