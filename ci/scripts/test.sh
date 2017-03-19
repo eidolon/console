@@ -15,7 +15,7 @@ cp -r ./console src/github.com/eidolon/
 
 # Debugging Information:
 whoami
-env
+env | sort
 
 # Move into source directory
 pushd src/github.com/eidolon/console > /dev/null
