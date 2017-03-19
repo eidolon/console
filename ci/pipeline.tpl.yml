@@ -3,7 +3,7 @@ resources:
 - name: console
   type: git
   source:
-    uri: https://github.com/eidolon/console.git
+    uri: {{.repository_git_url}}
     branch: ci
 
 - name: slack-alert
@@ -24,7 +24,14 @@ jobs:
       params:
         channel: "#{{.slack_alert_channel}}"
         text: >
-          <!here|here> Build for <{{.repository_url}}|{{.repository_name}}> succeeded. View the
+          <!here|here> Tests for <{{.repository_http_url}}|{{.repository_name}}> succeeded. View the
+          build log at $ATC_EXTERNAL_URL/builds/$BUILD_ID
+    on_failure:
+      put: slack-alert
+      params:
+        channel: "#{{.slack_alert_channel}}"
+        text: >
+          <!here|here> Tests for <{{.repository_http_url}}|{{.repository_name}}> failed. View the
           build log at $ATC_EXTERNAL_URL/builds/$BUILD_ID
 
 

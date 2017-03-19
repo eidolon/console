@@ -13,6 +13,6 @@ pushd "$SCRIPT_PATH" > /dev/null
 yft pipeline.tpl.yml < variables.yml > pipeline.yml
 
 # Update pipeline in Concourse
-fly -t ci set-pipeline -p eidolon:console -c pipeline.yml -l variables.yml
+fly -t ci set-pipeline -p eidolon:console -c pipeline.yml
 
 popd > /dev/null
