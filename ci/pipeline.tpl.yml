@@ -24,8 +24,8 @@ jobs:
       params:
         channel: "#{{.slack_alert_channel}}"
         text: >
-          Build for <{{.repository_url}}|{{.repository_name}}> succeeded. View the build log at
-          $ATC_EXTERNAL_URL/builds/$BUILD_ID
+          <!here|here> Build for <{{.repository_url}}|{{.repository_name}}> succeeded. View the
+          build log at $ATC_EXTERNAL_URL/builds/$BUILD_ID
 
 
 resource_types:
