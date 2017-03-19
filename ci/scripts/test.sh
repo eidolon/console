@@ -4,11 +4,10 @@ set -ex
 
 SCRIPT_PATH="$(dirname "$0")"
 
-# Ensure we're running in the correct directory.
 pushd "$SCRIPT_PATH/../../.." > /dev/null
 
-# We'll need to set the GOPATH to the current path, then set it up.
 export GOPATH=$PWD
+export PATH=$PATH:$GOPATH/bin
 
 # Move code into GOPATH
 mkdir -p src/github.com/eidolon
@@ -18,6 +17,7 @@ cp -r ./console src/github.com/eidolon/
 whoami
 env
 
+# Move into source directory
 pushd src/github.com/eidolon/console > /dev/null
 
 # Pre-install
@@ -31,5 +31,6 @@ golint -set_exit_status ./...
 go vet ./...
 go test -cover ./...
 
+# Leave
 popd > /dev/null
 popd > /dev/null
