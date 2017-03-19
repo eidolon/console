@@ -6,6 +6,12 @@ resources:
     uri: https://github.com/eidolon/console.git
     branch: ci
 
+- name: slack-alert
+  type: slack-notification
+  source:
+    url: {{slack_alert_url}}
+
+
 jobs:
 - name: test
   plan:
@@ -13,3 +19,19 @@ jobs:
     trigger: true
   - task: test
     file: console/ci/tasks/test.yml
+    on_success:
+      do:
+      - put: slack-alert
+        params:
+          channel: {{slack_alert_channel}}
+          text: >
+            Build for 'eidolon/console' succeeded. View the build log at
+            $ATC_EXTERNAL_URL/builds/$BUILD_ID
+
+
+resource_types:
+- name: slack-notification
+  type: docker-image
+  source:
+    repository: cfcommunity/slack-notification-resource
+    tag: latest

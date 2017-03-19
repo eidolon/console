@@ -28,3 +28,6 @@ _examples/*
 !_examples/*.go
 
 coverage.html
+
+# CI
+ci/variables.yml
