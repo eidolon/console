@@ -12,4 +12,4 @@ jobs:
   - get: console
     trigger: true
   - task: test
-    file: console/ci/test.yml
+    file: console/ci/tasks/test.yml
