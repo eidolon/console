@@ -1,6 +1,6 @@
 ---
 resources:
-- name: console
+- name: console-src
   type: git
   source:
     uri: https://github.com/eidolon/console.git
@@ -9,7 +9,7 @@ resources:
 jobs:
 - name: test
   plan:
-  - get: console
+  - get: console-src
     trigger: true
   - task: test
     file: console/ci/test.yml
