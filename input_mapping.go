@@ -32,13 +32,13 @@ func mapArguments(args []parameters.Argument, input *Input) error {
 		value := input.Arguments[i].Value
 
 		if err := arg.Value.Set(value); err != nil {
-			return fmt.Errorf("Invalid value '%s' for argument '%s'. Error: %s.", value, arg.Name, err)
+			return fmt.Errorf("console: Invalid value '%s' for argument '%s'. Error: %s", value, arg.Name, err)
 		}
 	}
 
 	for _, uarg := range unmappedArguments {
 		if uarg.Required {
-			return fmt.Errorf("Argument '%s' is required.", uarg.Name)
+			return fmt.Errorf("console: Argument '%s' is required", uarg.Name)
 		}
 	}
 
@@ -59,7 +59,7 @@ func mapOptions(opts []parameters.Option, input *Input) error {
 		value := inputOpt.Value
 
 		if opt.ValueMode == parameters.OptionValueRequired && value == "" {
-			return fmt.Errorf("Option '%s' requires a value.", name)
+			return fmt.Errorf("console: Option '%s' requires a value", name)
 		}
 
 		isEmptyOptional := opt.ValueMode == parameters.OptionValueOptional && value == ""
@@ -70,7 +70,7 @@ func mapOptions(opts []parameters.Option, input *Input) error {
 			ov.Set(ov.FlagValue())
 		} else if !isEmptyOptional {
 			if err := opt.Value.Set(value); err != nil {
-				return fmt.Errorf("Invalid value '%s' for option '%s'. Error: %s.", value, name, err)
+				return fmt.Errorf("console: Invalid value '%s' for option '%s'. Error: %s", value, name, err)
 			}
 		}
 	}
