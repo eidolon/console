@@ -5,10 +5,10 @@ image_resource:
   type: docker-image
   source:
     repository: golang
-    tag: "1.8"
+    tag: 1.8-alpine
 
 inputs:
 - name: console-src
 
 run:
-  path: ./console/ci/test.sh
+  path: ./console-src/ci/test.sh
