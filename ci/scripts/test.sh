@@ -18,6 +18,8 @@ cp -r ./console src/github.com/eidolon/
 whoami
 env
 
+pushd src/github.com/eidolon/console > /dev/null
+
 # Pre-install
 go get -u github.com/golang/lint/golint
 
@@ -29,4 +31,5 @@ golint -set_exit_status ./...
 go vet ./...
 go test -cover ./...
 
+popd > /dev/null
 popd > /dev/null
