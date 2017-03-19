@@ -4,6 +4,8 @@ SCRIPT_PATH="$(dirname "$0")"
 
 pushd "$SCRIPT_PATH/.." > /dev/null
 
+export GOPATH=$PWD/console-src
+
 set -ex
 
 # Pre-install
