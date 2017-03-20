@@ -3,8 +3,15 @@ resources:
 - name: console
   type: git
   source:
-    uri: {{.repository_git_url}}
+    uri: {{.repository_git_uri}}
     branch: ci
+
+- name: github-release
+  type: github-release
+  source:
+    user: {{.github_release_user}}
+    repository: {{.github_release_repository}}
+    access_token: {{.github_release_access_token}}
 
 - name: slack-alert
   type: slack-notification
@@ -19,14 +26,54 @@ resources:
     uri: {{.version_git_uri}}
     branch: {{.version_git_branch}}
     file: {{.version_git_file}}
-    private_key: {{.version_git_private_key}}
+    private_key: |
+{{.version_git_private_key|indent 6}}
 
 
 jobs:
-- name: test
+- name: major
+  serial_groups: [version]
   plan:
-  - get: console
-    trigger: true
+  - put: version
+    params: {bump: major}
+
+- name: minor
+  serial_groups: [version]
+  plan:
+  - put: version
+    params: {bump: minor}
+
+- name: patch
+  serial_groups: [version]
+  plan:
+  - put: version
+    params: {bump: patch}
+
+- name: alpha
+  serial_groups: [version]
+  plan:
+  - put: version
+    params: {pre: alpha}
+
+- name: beta
+  serial_groups: [version]
+  plan:
+  - put: version
+    params: {pre: beta}
+
+- name: rc
+  serial_groups: [version]
+  plan:
+  - put: version
+    params: {pre: rc}
+
+- name: test
+  serial_groups: [version]
+  plan:
+  - aggregate:
+    - get: console
+      trigger: true
+    - get: version
   - task: test
     file: console/ci/tasks/test.yml
     on_success:
@@ -34,22 +81,33 @@ jobs:
       params:
         channel: "#{{.slack_alert_channel}}"
         text: >
-          <!here|here> Tests for <{{.repository_http_url}}|{{.repository_name}}> succeeded. View the
+          <!here|here> Tests for <{{.repository_http_uri}}|{{.repository_name}}> succeeded. View the
           build log at $ATC_EXTERNAL_URL/builds/$BUILD_ID
     on_failure:
       put: slack-alert
       params:
         channel: "#{{.slack_alert_channel}}"
         text: >
-          <!here|here> Tests for <{{.repository_http_url}}|{{.repository_name}}> failed. View the
+          <!here|here> Tests for <{{.repository_http_uri}}|{{.repository_name}}> failed. View the
           build log at $ATC_EXTERNAL_URL/builds/$BUILD_ID
+  - put: version
+    params: {file: version/version}
 
-- name: bump-major
+- name: github-release
   plan:
-  - get: version
+  - aggregate:
+    - get: console
+      passed: [test]
+    - get: version
+      passed: [test]
+  - task: build-release-notes
+    file: console/ci/tasks/build-release-notes.yml
+  - put: github-release
     params:
-      bump: major
-      pre: rc
+      name: version/version
+      tag: version/version
+      tag_prefix: v
+      body: release-notes/notes.md
 
 resource_types:
 - name: slack-notification

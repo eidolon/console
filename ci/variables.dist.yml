@@ -1,9 +1,14 @@
 ---
-repository_name: eidolon/console
-repository_url: https://github.com/eidolon/console
+github_release_access_token: <GITHUB_RELEASE_ACCESS_TOKEN>
+github_release_repository: console
+github_release_user: eidolon
 
-slack_alert_url: <SLACK_ALERT_URL>
+repository_git_uri: https://github.com/eidolon/console.git
+repository_http_uri: https://github.com/eidolon/console
+repository_name: eidolon/console
+
 slack_alert_channel: <SLACK_ALERT_CHANNEL>
+slack_alert_url: <SLACK_ALERT_URL>
 
 version_git_branch: version
 version_git_file: version

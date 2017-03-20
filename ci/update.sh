@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 SCRIPT_PATH="$(dirname "$0")"
 
 if test ! $(which yft); then
