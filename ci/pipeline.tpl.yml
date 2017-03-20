@@ -11,6 +11,16 @@ resources:
   source:
     url: {{.slack_alert_url}}
 
+- name: version
+  type: semver
+  source:
+    initial_version: 0.0.1
+    driver: git
+    uri: {{.version_git_uri}}
+    branch: {{.version_git_branch}}
+    file: {{.version_git_file}}
+    private_key: {{.version_git_private_key}}
+
 
 jobs:
 - name: test
@@ -34,6 +44,12 @@ jobs:
           <!here|here> Tests for <{{.repository_http_url}}|{{.repository_name}}> failed. View the
           build log at $ATC_EXTERNAL_URL/builds/$BUILD_ID
 
+- name: bump-major
+  plan:
+  - get: version
+    params:
+      bump: major
+      pre: rc
 
 resource_types:
 - name: slack-notification

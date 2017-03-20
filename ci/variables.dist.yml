@@ -4,3 +4,8 @@ repository_url: https://github.com/eidolon/console
 
 slack_alert_url: <SLACK_ALERT_URL>
 slack_alert_channel: <SLACK_ALERT_CHANNEL>
+
+version_git_branch: version
+version_git_file: version
+version_git_private_key: <VERSION_GIT_PRIVATE_KEY>
+version_git_uri: git@github.com:eidolon/console.git
