@@ -30,14 +30,3 @@ matrix:
   GO_VERSION:
   - 1.7
   - 1.8
-
-
-#return fmt.Sprintf("*%s* <%s|%s/%s#%s> (%s) by %s",
-#  build.Status,
-#  build.Link,
-#  repo.Owner,
-#  repo.Name,
-#  build.Commit[:8],
-#  build.Branch,
-#  build.Author,
-#)
