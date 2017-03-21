@@ -12,7 +12,18 @@ pipeline:
     - go vet ./...
     - go test -cover ./...
 
+  notify:
+    image: plugins/slack
+    webhook: ${SLACK_WEBHOOK}
+    channel: builds
+    username: Drone Bot
+    when:
+      event:
+      - deployment
+      - push
+      - tag
+
 matrix:
   GO_VERSION:
-    - 1.7
-    - 1.8
+  - 1.7
+  - 1.8
