@@ -21,10 +21,7 @@ pipeline:
       *{{ uppercase build.status }}*: Build *<{{ build.link }}|#{{ build.number }}>* for *<https://github.com/{{ repo.owner }}/{{ repo.name }}/tree/{{ build.commit }}|{{ repo.owner }}/{{ repo.name }}#{{ truncate build.commit 8 }} ({{ build.branch }})>* by *{{ build.author }}*
       - GO_VERSION=${GO_VERSION}
     when:
-      event:
-      - deployment
-      - push
-      - tag
+      status: [ success, failure ]
 
 matrix:
   GO_VERSION:
