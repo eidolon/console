@@ -17,6 +17,10 @@ pipeline:
     webhook: ${SLACK_WEBHOOK}
     channel: builds
     username: Drone Bot
+    template: >
+      Build <{{ build.link }}|#{{ build.number }}> for
+      <https://github.com/{{ repo.owner }}/{{ repo.name }}/tree/{{ build.commit }}>|{{ repo.owner }}/{{ repo.name }}#{{ build.commit|truncate 8 }}>
+      finished with status *{{ build.status|uppercase }}*
     when:
       event:
       - deployment
@@ -27,3 +31,14 @@ matrix:
   GO_VERSION:
   - 1.7
   - 1.8
+
+
+#return fmt.Sprintf("*%s* <%s|%s/%s#%s> (%s) by %s",
+#  build.Status,
+#  build.Link,
+#  repo.Owner,
+#  repo.Name,
+#  build.Commit[:8],
+#  build.Branch,
+#  build.Author,
+#)
