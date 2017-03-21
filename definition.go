@@ -49,14 +49,14 @@ func (d *Definition) AddArgument(value parameters.Value, spec string, desc strin
 	arg, err := specification.ParseArgumentSpecification(spec)
 
 	if err != nil {
-		panic(fmt.Errorf("Error parsing argument specification: '%s'.", err.Error()))
+		panic(fmt.Errorf("console: Error parsing argument specification: '%s'", err.Error()))
 	}
 
 	arg.Value = value
 	arg.Description = desc
 
 	if _, ok := d.arguments[arg.Name]; ok {
-		panic(fmt.Errorf("Cannot redeclare argument with name '%s'.", arg.Name))
+		panic(fmt.Errorf("console: Cannot redeclare argument with name '%s'", arg.Name))
 	}
 
 	d.arguments[arg.Name] = arg
@@ -69,7 +69,7 @@ func (d *Definition) AddOption(value parameters.Value, spec string, desc string)
 	opt, err := specification.ParseOptionSpecification(spec)
 
 	if err != nil {
-		panic(fmt.Errorf("Error parsing option specification: '%s'.", err.Error()))
+		panic(fmt.Errorf("console: Error parsing option specification: '%s'", err.Error()))
 	}
 
 	opt.Value = value
@@ -77,7 +77,7 @@ func (d *Definition) AddOption(value parameters.Value, spec string, desc string)
 
 	for _, name := range opt.Names {
 		if _, ok := d.options[name]; ok {
-			panic(fmt.Errorf("Cannot redeclare option with name '%s'.", name))
+			panic(fmt.Errorf("console: Cannot redeclare option with name '%s'", name))
 		}
 
 		d.options[name] = opt
