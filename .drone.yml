@@ -17,9 +17,10 @@ pipeline:
     webhook: ${SLACK_WEBHOOK}
     channel: builds
     username: Drone Bot
-    template: >
-      *{{ uppercase build.status }}*: Build *<{{ build.link }}|#{{ build.number }}>* for
-      <https://github.com/{{ repo.owner }}/{{ repo.name }}/tree/{{ build.commit }}>|{{ repo.owner }}/{{ repo.name }}#{{ truncate build.commit 8 }}>
+    template: |
+      *{{ uppercase build.status }}*: Build *<{{ build.link }}|#{{ build.number }}>* for <https://github.com/{{ repo.owner }}/{{ repo.name }}/tree/{{ build.commit }}>|{{ repo.owner }}/{{ repo.name }}#{{ truncate build.commit 8 }}>
+      * Branch: {{ build.branch }}
+      * Author: {{ build.author }}
     when:
       event:
       - deployment
