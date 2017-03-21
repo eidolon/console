@@ -6,12 +6,20 @@ resources:
     uri: {{.repository_git_uri}}
     branch: ci
 
+- name: console-pr
+  type: pull-request
+  source:
+    repo: {{.repository_user}}/{{.repository_name}}
+    access_token: {{.repository_access_token}}
+    private_key: |
+{{.repository_private_key|indent 6}}
+
 - name: github-release
   type: github-release
   source:
-    user: {{.github_release_user}}
-    repository: {{.github_release_repository}}
-    access_token: {{.github_release_access_token}}
+    user: {{.repository_user}}
+    repository: {{.repository_name}}
+    access_token: {{.repository_access_token}}
 
 - name: slack-alert
   type: slack-notification
@@ -27,7 +35,7 @@ resources:
     branch: {{.version_git_branch}}
     file: {{.version_git_file}}
     private_key: |
-{{.version_git_private_key|indent 6}}
+{{.repository_private_key|indent 6}}
 
 
 jobs:
@@ -81,17 +89,35 @@ jobs:
       params:
         channel: "#{{.slack_alert_channel}}"
         text: >
-          <!here|here> Tests for <{{.repository_http_uri}}|{{.repository_name}}> succeeded. View the
+          <!here|here> Tests for <{{.repository_http_uri}}|{{.repository_fqn}}> succeeded. View the
           build log at $ATC_EXTERNAL_URL/builds/$BUILD_ID
     on_failure:
       put: slack-alert
       params:
         channel: "#{{.slack_alert_channel}}"
         text: >
-          <!here|here> Tests for <{{.repository_http_uri}}|{{.repository_name}}> failed. View the
+          <!here|here> Tests for <{{.repository_http_uri}}|{{.repository_fqn}}> failed. View the
           build log at $ATC_EXTERNAL_URL/builds/$BUILD_ID
   - put: version
     params: {file: version/version}
+
+- name: test-pr
+  plan:
+  - get: console-pr
+    trigger: true
+    version: every
+  - task: test
+    file: console-pr/ci/tasks/test.yml
+    on_success:
+      put: console-pr
+      params:
+        path: console-pr
+        status: success
+    on_failure:
+      put: console-pr
+      params:
+        path: console-pr
+        status: failure
 
 - name: github-release
   plan:
@@ -114,4 +140,8 @@ resource_types:
   type: docker-image
   source:
     repository: cfcommunity/slack-notification-resource
-    tag: latest
+
+- name: pull-request
+  type: docker-image
+  source:
+    repository: jtarchie/pr

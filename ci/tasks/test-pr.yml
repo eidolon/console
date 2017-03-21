@@ -1,0 +1,14 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: golang
+    tag: 1.8.0
+
+inputs:
+- name: console
+
+run:
+  path: ./console-pr/ci/scripts/test.sh

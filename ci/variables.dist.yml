@@ -1,16 +1,15 @@
 ---
-github_release_access_token: <GITHUB_RELEASE_ACCESS_TOKEN>
-github_release_repository: console
-github_release_user: eidolon
-
 repository_git_uri: https://github.com/eidolon/console.git
 repository_http_uri: https://github.com/eidolon/console
-repository_name: eidolon/console
+repository_fqn: eidolon/console
+repository_user: eidolon
+repository_name: console
+repository_access_token: <REPOSITORY_ACCESS_TOKEN>
+repository_private_key: <REPOSITORY_PRIVATE_KEY>
 
 slack_alert_channel: <SLACK_ALERT_CHANNEL>
 slack_alert_url: <SLACK_ALERT_URL>
 
 version_git_branch: version
 version_git_file: version
-version_git_private_key: <VERSION_GIT_PRIVATE_KEY>
 version_git_uri: git@github.com:eidolon/console.git
