@@ -18,9 +18,8 @@ pipeline:
     channel: builds
     username: Drone Bot
     template: >
-      Build <{{ build.link }}|#{{ build.number }}> for
-      <https://github.com/{{ repo.owner }}/{{ repo.name }}/tree/{{ build.commit }}>|{{ repo.owner }}/{{ repo.name }}#{{ build.commit|truncate 8 }}>
-      finished with status *{{ build.status|uppercase }}*
+      *{{ uppercase build.status }}*: Build *<{{ build.link }}|#{{ build.number }}>* for
+      <https://github.com/{{ repo.owner }}/{{ repo.name }}/tree/{{ build.commit }}>|{{ repo.owner }}/{{ repo.name }}#{{ truncate build.commit 8 }}>
     when:
       event:
       - deployment
