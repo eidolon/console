@@ -11,4 +11,4 @@ inputs:
 - name: console-pr
 
 run:
-  path: ./console-pr/ci/scripts/test.sh
+  path: ./console-pr/ci/scripts/test-pr.sh
