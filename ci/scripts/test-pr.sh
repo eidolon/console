@@ -11,7 +11,7 @@ export PATH=$PATH:$GOPATH/bin
 
 # Move code into GOPATH
 mkdir -p src/github.com/eidolon
-cp -r ./console-pr src/github.com/eidolon/
+cp -r ./console-pr src/github.com/eidolon/console
 
 # Debugging Information:
 whoami
