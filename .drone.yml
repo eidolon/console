@@ -1,0 +1,18 @@
+workspace:
+  base: /go
+  path: src/github.com/eidolon/console
+
+pipeline:
+  test:
+    image: golang:${GO_VERSION}
+    commands:
+    - go get github.com/golang/lint/golint
+    - go get ./...
+    - golint -set_exit_status ./...
+    - go vet ./...
+    - go test -cover ./...
+
+matrix:
+  GO_VERSION:
+    - 1.7
+    - 1.8
