@@ -107,7 +107,9 @@ jobs:
     trigger: true
     version: every
   - task: test
-    file: console-pr/ci/tasks/test-pr.yml
+    file: console-pr/ci/tasks/test.yml
+    input_mapping:
+      console: console-pr
     on_success:
       put: console-pr
       params:
