@@ -119,7 +119,7 @@ jobs:
     put: console-pr
     params: { path: console-pr, status: failure }
 
-- name: github-release
+- name: console-github-release
   plan:
   - aggregate:
     - get: console-master
