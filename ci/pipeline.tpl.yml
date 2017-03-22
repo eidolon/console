@@ -1,4 +1,17 @@
 ---
+groups:
+- name: console
+  jobs:
+  - console-bump-alpha
+  - console-bump-beta
+  - console-bump-major
+  - console-bump-minor
+  - console-bump-patch
+  - console-bump-rc
+  - console-github-release
+  - console-test-master
+  - console-test-pr
+
 resources:
 - name: console-master
   type: git
@@ -75,7 +88,7 @@ jobs:
   - put: console-version
     params: { pre: rc }
 
-- name: test-console-master
+- name: console-test-master
   serial_groups: [ version ]
   plan:
   - aggregate:
@@ -102,7 +115,7 @@ jobs:
         <!here|here> Tests for <{{.repository_http_uri}}|{{.repository_fqn}}> failed. View the
         build log at $ATC_EXTERNAL_URL/builds/$BUILD_ID
 
-- name: test-console-pr
+- name: console-test-pr
   plan:
   - get: console-pr
     trigger: true
@@ -123,9 +136,9 @@ jobs:
   plan:
   - aggregate:
     - get: console-master
-      passed: [ test-console-master ]
+      passed: [ console-test-master ]
     - get: console-version
-      passed: [ test-console-master ]
+      passed: [ console-test-master ]
   - task: build-release-notes
     file: console-master/ci/tasks/build-release-notes.yml
     input_mapping: { console: console-master, version: console-version }
