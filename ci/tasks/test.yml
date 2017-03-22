@@ -7,7 +7,7 @@ image_resource:
 
 inputs:
 - name: console
-  path: /go/src/github.com/eidolon/console
+  path: go/src/github.com/eidolon/console
 
 run:
-  path: /go/src/github.com/eidolon/console/ci/scripts/test.sh
+  path: go/src/github.com/eidolon/console/ci/scripts/test.sh

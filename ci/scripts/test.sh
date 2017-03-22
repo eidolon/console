@@ -2,20 +2,16 @@
 
 set -ex
 
-SCRIPT_PATH="$(dirname "$0")"
+export GOPATH="$PWD/go"
+export PATH="$PATH:$GOPATH/bin"
 
-pushd "$SCRIPT_PATH/../.." > /dev/null
+pushd "$(dirname "$0")/../.." > /dev/null
+    # Prepare
+    go get -u github.com/golang/lint/golint
+    go get -d -t ./...
 
-# Pre-install
-go get -u github.com/golang/lint/golint
-
-# Install
-go get -d -t ./...
-
-# Script
-golint -set_exit_status ./...
-go vet ./...
-go test -cover ./...
-
-# Leave
+    # Run
+    golint -set_exit_status ./...
+    go vet ./...
+    go test -cover ./...
 popd > /dev/null
