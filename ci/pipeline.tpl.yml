@@ -75,7 +75,7 @@ jobs:
   - put: console-version
     params: { pre: rc }
 
-- name: test
+- name: test-console-master
   serial_groups: [ version ]
   plan:
   - aggregate:
@@ -102,7 +102,7 @@ jobs:
         <!here|here> Tests for <{{.repository_http_uri}}|{{.repository_fqn}}> failed. View the
         build log at $ATC_EXTERNAL_URL/builds/$BUILD_ID
 
-- name: test-pr
+- name: test-console-pr
   plan:
   - get: console-pr
     trigger: true
@@ -123,9 +123,9 @@ jobs:
   plan:
   - aggregate:
     - get: console-master
-      passed: [ test ]
+      passed: [ test-console-master ]
     - get: console-version
-      passed: [ test ]
+      passed: [ test-console-master ]
   - task: build-release-notes
     file: console-master/ci/tasks/build-release-notes.yml
     input_mapping: { console: console-master, version: console-version }
