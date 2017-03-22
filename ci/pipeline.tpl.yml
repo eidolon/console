@@ -136,6 +136,7 @@ jobs:
       tag_prefix: v
       body: release-notes/notes.md
 
+
 resource_types:
 - name: slack-notification
   type: docker-image
