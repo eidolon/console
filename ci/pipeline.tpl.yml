@@ -84,22 +84,22 @@ jobs:
     - get: version
   - task: test
     file: console/ci/tasks/test.yml
-    on_success:
-      put: slack-alert
-      params:
-        channel: "#{{.slack_alert_channel}}"
-        text: >
-          <!here|here> Tests for <{{.repository_http_uri}}|{{.repository_fqn}}> succeeded. View the
-          build log at $ATC_EXTERNAL_URL/builds/$BUILD_ID
-    on_failure:
-      put: slack-alert
-      params:
-        channel: "#{{.slack_alert_channel}}"
-        text: >
-          <!here|here> Tests for <{{.repository_http_uri}}|{{.repository_fqn}}> failed. View the
-          build log at $ATC_EXTERNAL_URL/builds/$BUILD_ID
   - put: version
     params: { file: version/version }
+  on_success:
+    put: slack-alert
+    params:
+      channel: "#{{.slack_alert_channel}}"
+      text: >
+        <!here|here> Tests for <{{.repository_http_uri}}|{{.repository_fqn}}> succeeded. View the
+        build log at $ATC_EXTERNAL_URL/builds/$BUILD_ID
+  on_failure:
+    put: slack-alert
+    params:
+      channel: "#{{.slack_alert_channel}}"
+      text: >
+        <!here|here> Tests for <{{.repository_http_uri}}|{{.repository_fqn}}> failed. View the
+        build log at $ATC_EXTERNAL_URL/builds/$BUILD_ID
 
 - name: test-pr
   plan:
@@ -111,12 +111,12 @@ jobs:
   - task: test
     file: console-pr/ci/tasks/test.yml
     input_mapping: { console: console-pr }
-    on_success:
-      put: console-pr
-      params: { path: console-pr, status: success }
-    on_failure:
-      put: console-pr
-      params: { path: console-pr, status: failure }
+  on_success:
+    put: console-pr
+    params: { path: console-pr, status: success }
+  on_failure:
+    put: console-pr
+    params: { path: console-pr, status: failure }
 
 - name: github-release
   plan:
