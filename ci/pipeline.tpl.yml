@@ -107,13 +107,10 @@ jobs:
     trigger: true
     version: every
   - put: console-pr
-    params:
-      path: console-pr
-      status: pending
+    params: { path: console-pr, status: pending }
   - task: test
     file: console-pr/ci/tasks/test.yml
-    input_mapping:
-      console: console-pr
+    input_mapping: { console: console-pr }
     on_success:
       put: console-pr
       params: { path: console-pr, status: success }
