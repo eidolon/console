@@ -40,43 +40,43 @@ resources:
 
 jobs:
 - name: major
-  serial_groups: [version]
+  serial_groups: [ version ]
   plan:
   - put: version
-    params: {bump: major}
+    params: { bump: major }
 
 - name: minor
-  serial_groups: [version]
+  serial_groups: [ version ]
   plan:
   - put: version
-    params: {bump: minor}
+    params: { bump: minor }
 
 - name: patch
-  serial_groups: [version]
+  serial_groups: [ version ]
   plan:
   - put: version
-    params: {bump: patch}
+    params: { bump: patch }
 
 - name: alpha
-  serial_groups: [version]
+  serial_groups: [ version ]
   plan:
   - put: version
-    params: {pre: alpha}
+    params: { pre: alpha }
 
 - name: beta
-  serial_groups: [version]
+  serial_groups: [ version ]
   plan:
   - put: version
-    params: {pre: beta}
+    params: { pre: beta }
 
 - name: rc
-  serial_groups: [version]
+  serial_groups: [ version ]
   plan:
   - put: version
-    params: {pre: rc}
+    params: { pre: rc }
 
 - name: test
-  serial_groups: [version]
+  serial_groups: [ version ]
   plan:
   - aggregate:
     - get: console
@@ -99,7 +99,7 @@ jobs:
           <!here|here> Tests for <{{.repository_http_uri}}|{{.repository_fqn}}> failed. View the
           build log at $ATC_EXTERNAL_URL/builds/$BUILD_ID
   - put: version
-    params: {file: version/version}
+    params: { file: version/version }
 
 - name: test-pr
   plan:
@@ -116,22 +116,18 @@ jobs:
       console: console-pr
     on_success:
       put: console-pr
-      params:
-        path: console-pr
-        status: success
+      params: { path: console-pr, status: success }
     on_failure:
       put: console-pr
-      params:
-        path: console-pr
-        status: failure
+      params: { path: console-pr, status: failure }
 
 - name: github-release
   plan:
   - aggregate:
     - get: console
-      passed: [test]
+      passed: [ test ]
     - get: version
-      passed: [test]
+      passed: [ test ]
   - task: build-release-notes
     file: console/ci/tasks/build-release-notes.yml
   - put: github-release
