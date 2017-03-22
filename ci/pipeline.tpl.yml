@@ -106,6 +106,10 @@ jobs:
   - get: console-pr
     trigger: true
     version: every
+  - put: console-pr
+    params:
+      path: console-pr
+      status: pending
   - task: test
     file: console-pr/ci/tasks/test.yml
     input_mapping:
