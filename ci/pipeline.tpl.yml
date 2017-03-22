@@ -1,6 +1,6 @@
 ---
 resources:
-- name: console
+- name: console-master
   type: git
   source:
     uri: {{.repository_git_uri}}
@@ -14,7 +14,7 @@ resources:
     private_key: |
 {{.repository_private_key|indent 6}}
 
-- name: github-release
+- name: console-github-release
   type: github-release
   source:
     user: {{.repository_user}}
@@ -26,7 +26,7 @@ resources:
   source:
     url: {{.slack_alert_url}}
 
-- name: version
+- name: console-version
   type: semver
   source:
     initial_version: 0.0.1
@@ -39,53 +39,54 @@ resources:
 
 
 jobs:
-- name: major
+- name: console-bump-major
   serial_groups: [ version ]
   plan:
-  - put: version
+  - put: console-version
     params: { bump: major }
 
-- name: minor
+- name: console-bump-minor
   serial_groups: [ version ]
   plan:
-  - put: version
+  - put: console-version
     params: { bump: minor }
 
-- name: patch
+- name: console-bump-patch
   serial_groups: [ version ]
   plan:
-  - put: version
+  - put: console-version
     params: { bump: patch }
 
-- name: alpha
+- name: console-bump-alpha
   serial_groups: [ version ]
   plan:
-  - put: version
+  - put: console-version
     params: { pre: alpha }
 
-- name: beta
+- name: console-bump-beta
   serial_groups: [ version ]
   plan:
-  - put: version
+  - put: console-version
     params: { pre: beta }
 
-- name: rc
+- name: console-bump-rc
   serial_groups: [ version ]
   plan:
-  - put: version
+  - put: console-version
     params: { pre: rc }
 
 - name: test
   serial_groups: [ version ]
   plan:
   - aggregate:
-    - get: console
+    - get: console-master
       trigger: true
-    - get: version
+    - get: console-version
   - task: test
-    file: console/ci/tasks/test.yml
-  - put: version
-    params: { file: version/version }
+    file: console-master/ci/tasks/test.yml
+    input_mapping: { console: console-master }
+  - put: console-version
+    params: { file: console-version/version }
   on_success:
     put: slack-alert
     params:
@@ -121,16 +122,17 @@ jobs:
 - name: github-release
   plan:
   - aggregate:
-    - get: console
+    - get: console-master
       passed: [ test ]
-    - get: version
+    - get: console-version
       passed: [ test ]
   - task: build-release-notes
-    file: console/ci/tasks/build-release-notes.yml
-  - put: github-release
+    file: console-master/ci/tasks/build-release-notes.yml
+    input_mapping: { console: console-master, version: console-version }
+  - put: console-github-release
     params:
-      name: version/version
-      tag: version/version
+      name: console-version/version
+      tag: console-version/version
       tag_prefix: v
       body: release-notes/notes.md
 
