@@ -27,25 +27,25 @@ type Command struct {
 	// Function to execute when this command is requested.
 	Execute ExecuteFunc
 
-	// Array of subcommands. May contain sub-commands.
+	// Array of sub-commands. May contain sub-commands.
 	commands []*Command
 }
 
-// AddCommands adds subcommands to the command.
+// AddCommands adds sub-commands to the command.
 func (c *Command) AddCommands(commands []*Command) *Command {
 	c.commands = append(c.commands, commands...)
 
 	return c
 }
 
-// AddCommand adds a subcommand to the command.
+// AddCommand adds a sub-command to the command.
 func (c *Command) AddCommand(command *Command) *Command {
 	c.commands = append(c.commands, command)
 
 	return c
 }
 
-// Commands gets the subcommands on a command.
+// Commands gets the sub-commands on a command.
 func (c *Command) Commands() []*Command {
 	return c.commands
 }

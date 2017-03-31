@@ -168,8 +168,8 @@ func TestApplication(t *testing.T) {
 			assert.Equal(t, "bar", foo)
 		})
 
-		t.Run("should work with subcommands", func(t *testing.T) {
-			message := fmt.Sprintf("Subcommand: %d", rand.Int())
+		t.Run("should work with sub-commands", func(t *testing.T) {
+			message := fmt.Sprintf("sub-command: %d", rand.Int())
 
 			subcommand := console.Command{
 				Name: "subcommand",
@@ -187,7 +187,7 @@ func TestApplication(t *testing.T) {
 			application.AddCommand(&command)
 			application.Run([]string{"command", "subcommand"}, []string{})
 
-			assert.True(t, strings.Contains(writer.String(), message), "Expected subcommand to run")
+			assert.True(t, strings.Contains(writer.String(), message), "Expected sub-command to run")
 		})
 	})
 

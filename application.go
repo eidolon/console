@@ -102,7 +102,7 @@ func (a *Application) AddCommand(command *Command) {
 	a.commands = append(a.commands, command)
 }
 
-// Commands gets the subcommands on an application.
+// Commands gets the sub-commands on an application.
 func (a *Application) Commands() []*Command {
 	return a.commands
 }
