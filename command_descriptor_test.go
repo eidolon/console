@@ -147,18 +147,18 @@ func TestDescribeCommand(t *testing.T) {
 			Name: "test-command-name",
 		}
 
-		subcommand := console.Command{
-			Name:        "test-subcommand-name",
+		subCommand := console.Command{
+			Name:        "test-subCommand-name",
 			Description: "Test sub-command description.",
 		}
 
-		command.AddCommand(&subcommand)
+		command.AddCommand(&subCommand)
 
 		result := console.DescribeCommand(application, &command, []string{command.Name})
 
 		assert.True(t, strings.Contains(result, "COMMANDS:"), "Expected commands")
-		assert.True(t, strings.Contains(result, subcommand.Name), "Expected sub-command name")
-		assert.True(t, strings.Contains(result, subcommand.Description), "Expected sub-command desc")
+		assert.True(t, strings.Contains(result, subCommand.Name), "Expected sub-command name")
+		assert.True(t, strings.Contains(result, subCommand.Description), "Expected sub-command desc")
 	})
 }
 

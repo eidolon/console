@@ -130,10 +130,10 @@ func (a *Application) findCommandInInput() (*Command, []string) {
 		if command != nil {
 			a.input.Arguments = a.input.Arguments[1:]
 
-			subcommand := loop(depth+1, command)
+			subCommand := loop(depth+1, command)
 
-			if subcommand != nil {
-				command = subcommand
+			if subCommand != nil {
+				command = subCommand
 			}
 		}
 

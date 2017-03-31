@@ -171,8 +171,8 @@ func TestApplication(t *testing.T) {
 		t.Run("should work with sub-commands", func(t *testing.T) {
 			message := fmt.Sprintf("sub-command: %d", rand.Int())
 
-			subcommand := console.Command{
-				Name: "subcommand",
+			subCommand := console.Command{
+				Name: "subCommand",
 				Execute: func(input *console.Input, output *console.Output) error {
 					output.Println(message)
 					return nil
@@ -180,12 +180,12 @@ func TestApplication(t *testing.T) {
 			}
 
 			command := console.Command{Name: "command"}
-			command.AddCommand(&subcommand)
+			command.AddCommand(&subCommand)
 
 			writer := bytes.Buffer{}
 			application := createApplication(&writer)
 			application.AddCommand(&command)
-			application.Run([]string{"command", "subcommand"}, []string{})
+			application.Run([]string{"command", "subCommand"}, []string{})
 
 			assert.True(t, strings.Contains(writer.String(), message), "Expected sub-command to run")
 		})
