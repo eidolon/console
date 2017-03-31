@@ -16,7 +16,7 @@ type ExecuteFunc func(input *Input, output *Output) error
 type Command struct {
 	// The name of the command.
 	Name string
-	// An alias for the name, usually a shortened name.
+	// An optional alias for the name, usually a shortened name.
 	Alias string
 	// The description of the command.
 	Description string

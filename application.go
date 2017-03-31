@@ -119,7 +119,10 @@ func (a *Application) findCommandInInput() (*Command, []string) {
 
 		var command *Command
 		for _, cmd := range container.Commands() {
-			if cmd.Name == a.input.Arguments[0].Value {
+			isNameMatch := cmd.Name == a.input.Arguments[0].Value
+			isAliasMatch := cmd.Alias == a.input.Arguments[0].Value
+
+			if isNameMatch || isAliasMatch {
 				command = cmd
 				// Add to breadcrumb trail...
 				path = append(path, cmd.Name)
