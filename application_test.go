@@ -3,12 +3,11 @@ package console_test
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"io"
+	"math/rand"
 	"strings"
 	"testing"
-
-	"fmt"
-	"math/rand"
 
 	"github.com/eidolon/console"
 	"github.com/eidolon/console/assert"
@@ -30,7 +29,8 @@ func TestApplication(t *testing.T) {
 
 	createTestCommand := func(a *string, b *int) *console.Command {
 		return &console.Command{
-			Name: "test",
+			Name:  "test",
+			Alias: "t",
 			Configure: func(definition *console.Definition) {
 				definition.AddArgument(console.ArgumentDefinition{
 					Value: parameters.NewStringValue(a),
@@ -116,6 +116,19 @@ func TestApplication(t *testing.T) {
 			application.AddCommand(createTestCommand(&a, &b))
 
 			code := application.Run([]string{"test", "aval", "--int-opt=384"}, []string{})
+
+			assert.Equal(t, 0, code)
+		})
+
+		t.Run("should return exit code 0 if a command with an alias was found, and ran OK", func(t *testing.T) {
+			var a string
+			var b int
+
+			writer := bytes.Buffer{}
+			application := createApplication(&writer)
+			application.AddCommand(createTestCommand(&a, &b))
+
+			code := application.Run([]string{"t", "aval", "--int-opt=384"}, []string{})
 
 			assert.Equal(t, 0, code)
 		})
