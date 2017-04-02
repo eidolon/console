@@ -72,11 +72,6 @@ func (a *Application) Run(params []string, env []string) int {
 		command.Configure(definition)
 	}
 
-	if a.hasHelpOption() || (command == nil || command.Execute == nil) {
-		a.showHelp(output, command, path)
-		return 100
-	}
-
 	if a.hasIsAtPathOption() {
 		isAtPath := a.input.GetOptionValue([]string{"ecint-is-at-path"})
 
@@ -85,6 +80,11 @@ func (a *Application) Run(params []string, env []string) int {
 		}
 
 		return 1
+	}
+
+	if a.hasHelpOption() || (command == nil || command.Execute == nil) {
+		a.showHelp(output, command, path)
+		return 100
 	}
 
 	err := MapInput(definition, input, env)
