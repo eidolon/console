@@ -5,6 +5,8 @@ import (
 	"os"
 	"path/filepath"
 
+	"strings"
+
 	"github.com/eidolon/console/parameters"
 )
 
@@ -76,9 +78,9 @@ func (a *Application) Run(params []string, env []string) int {
 	}
 
 	if a.hasIsAtPathOption() {
-		isAtPath := a.input.GetOptionValue("ecint-is-at-path")
+		isAtPath := a.input.GetOptionValue([]string{"ecint-is-at-path"})
 
-		if isAtPath == path {
+		if isAtPath == strings.Join(path, " ") {
 			return 0
 		}
 
