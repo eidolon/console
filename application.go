@@ -75,6 +75,16 @@ func (a *Application) Run(params []string, env []string) int {
 		return 100
 	}
 
+	if a.hasIsAtPathOption() {
+		isAtPath := a.input.GetOptionValue("ecint-is-at-path")
+
+		if isAtPath == path {
+			return 0
+		}
+
+		return 1
+	}
+
 	err := MapInput(definition, input, env)
 	if err != nil {
 		output.Println(err)
@@ -151,6 +161,18 @@ func (a *Application) findCommandInInput() (*Command, []string) {
 func (a *Application) hasHelpOption() bool {
 	for _, opt := range a.input.Options {
 		if opt.Name == "help" || opt.Name == "h" {
+			return true
+		}
+	}
+
+	return false
+}
+
+// hasIsAtPathOption checks to see if the internal "is at path" option is passed. This option is
+// used to check if the current input would result in a given command path. Useful for completions.
+func (a *Application) hasIsAtPathOption() bool {
+	for _, opt := range a.input.Options {
+		if opt.Name == "ecint-is-at-path" {
 			return true
 		}
 	}
