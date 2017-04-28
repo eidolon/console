@@ -10,7 +10,7 @@ import (
 	"testing"
 
 	"github.com/eidolon/console"
-	"github.com/eidolon/console/assert"
+	"github.com/SeerUK/assert"
 	"github.com/eidolon/console/parameters"
 )
 

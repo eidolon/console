@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/eidolon/console"
-	"github.com/eidolon/console/assert"
+	"github.com/SeerUK/assert"
 )
 
 func TestParseInput(t *testing.T) {
