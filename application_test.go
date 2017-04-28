@@ -9,8 +9,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/eidolon/console"
 	"github.com/SeerUK/assert"
+	"github.com/eidolon/console"
 	"github.com/eidolon/console/parameters"
 )
 
