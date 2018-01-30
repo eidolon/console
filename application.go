@@ -86,7 +86,7 @@ func (a *Application) Run(params []string, env []string) int {
 	if err != nil {
 		output.Println(err)
 		output.Printf("Try '%s %s --help' for more information.\n", a.UsageName, command.Name)
-		return 102
+		return 1
 	}
 
 	return output.exitCode
