@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/SeerUK/assert"
+	"github.com/seeruk/assert"
 	"github.com/eidolon/console/parameters"
 )
 

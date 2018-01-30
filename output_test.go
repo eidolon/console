@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/SeerUK/assert"
+	"github.com/seeruk/assert"
 	"github.com/eidolon/console"
 )
 
