@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/seeruk/assert"
 	"github.com/eidolon/console/specification"
+	"github.com/seeruk/assert"
 )
 
 func TestNewScanner(t *testing.T) {

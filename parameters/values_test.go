@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/seeruk/assert"
 	"github.com/eidolon/console/parameters"
+	"github.com/seeruk/assert"
 )
 
 func TestBoolValue(t *testing.T) {

@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/seeruk/assert"
 	"github.com/eidolon/console/parameters"
+	"github.com/seeruk/assert"
 )
 
 func TestDescribeOptions(t *testing.T) {

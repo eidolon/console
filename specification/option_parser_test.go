@@ -3,9 +3,9 @@ package specification_test
 import (
 	"testing"
 
-	"github.com/seeruk/assert"
 	"github.com/eidolon/console/parameters"
 	"github.com/eidolon/console/specification"
+	"github.com/seeruk/assert"
 )
 
 func TestParseOptionSpecification(t *testing.T) {

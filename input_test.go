@@ -3,8 +3,8 @@ package console_test
 import (
 	"testing"
 
-	"github.com/seeruk/assert"
 	"github.com/eidolon/console"
+	"github.com/seeruk/assert"
 )
 
 func TestInput(t *testing.T) {

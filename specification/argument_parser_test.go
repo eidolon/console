@@ -3,8 +3,8 @@ package specification_test
 import (
 	"testing"
 
-	"github.com/seeruk/assert"
 	"github.com/eidolon/console/specification"
+	"github.com/seeruk/assert"
 )
 
 func TestParseArgumentSpecification(t *testing.T) {
