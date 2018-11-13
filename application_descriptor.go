@@ -53,11 +53,7 @@ func describeApplicationUsage(app *Application) string {
 func findApplicationOptions(app *Application) []parameters.Option {
 	definition := NewDefinition()
 
-	app.preConfigure(definition)
-
-	if app.Configure != nil {
-		app.Configure(definition)
-	}
+	app.configure(definition)
 
 	var options []parameters.Option
 	for _, opt := range definition.Options() {

@@ -51,7 +51,7 @@ type OptionDefinition struct {
 
 // Arguments gets all of the arguments in this Definition.
 func (d *Definition) Arguments() []parameters.Argument {
-	arguments := []parameters.Argument{}
+	var arguments []parameters.Argument
 
 	for _, key := range d.argumentKeys {
 		arguments = append(arguments, d.arguments[key])
@@ -100,6 +100,7 @@ func (d *Definition) AddOption(definition OptionDefinition) {
 
 	for _, name := range opt.Names {
 		if _, ok := d.options[name]; ok {
+			fmt.Println(definition)
 			panic(fmt.Errorf("console: Cannot redeclare option with name '%s'", name))
 		}
 

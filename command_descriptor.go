@@ -13,7 +13,7 @@ import (
 func DescribeCommand(app *Application, cmd *Command, path []string) string {
 	var help string
 
-	arguments := findCommandArguments(cmd)
+	arguments := findCommandArguments(app, cmd)
 	options := findCommandOptions(app, cmd)
 
 	help += fmt.Sprintf("%s\n", describeCommandUsage(app, cmd, arguments, options, path))
@@ -126,12 +126,8 @@ func describeCommandUsage(app *Application, cmd *Command, args []parameters.Argu
 }
 
 // findCommandArguments finds all of the defined arguments on the given application and command.
-func findCommandArguments(cmd *Command) []parameters.Argument {
-	definition := NewDefinition()
-
-	if cmd.Configure != nil {
-		cmd.Configure(definition)
-	}
+func findCommandArguments(app *Application, cmd *Command) []parameters.Argument {
+	definition := buildCommandDefinition(app, cmd)
 
 	var arguments []parameters.Argument
 	for _, arg := range definition.Arguments() {
@@ -143,17 +139,7 @@ func findCommandArguments(cmd *Command) []parameters.Argument {
 
 // findCommandOptions finds all of the defined options on the given application and command.
 func findCommandOptions(app *Application, cmd *Command) []parameters.Option {
-	definition := NewDefinition()
-
-	app.preConfigure(definition)
-
-	if app.Configure != nil {
-		app.Configure(definition)
-	}
-
-	if cmd.Configure != nil {
-		cmd.Configure(definition)
-	}
+	definition := buildCommandDefinition(app, cmd)
 
 	var options []parameters.Option
 	for _, opt := range definition.Options() {
@@ -161,4 +147,18 @@ func findCommandOptions(app *Application, cmd *Command) []parameters.Option {
 	}
 
 	return options
+}
+
+// buildCommandDefinition creates a definition for a given command, using the application and the
+// given command to define options and arguments.
+func buildCommandDefinition(app *Application, cmd *Command) *Definition {
+	definition := NewDefinition()
+
+	app.configure(definition)
+
+	if cmd != nil && cmd.Configure != nil {
+		cmd.Configure(definition)
+	}
+
+	return definition
 }

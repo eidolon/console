@@ -3,6 +3,7 @@ package parameters
 // Option value modes.
 const (
 	OptionValueNone OptionValueMode = iota
+	// @TODO: Remove this. It makes no sense.
 	OptionValueOptional
 	OptionValueRequired
 )
@@ -10,7 +11,7 @@ const (
 // OptionValueMode represents the different potential requirements of an option's value.
 type OptionValueMode int
 
-// Option provides the internal representation of an input option paremeter.
+// Option provides the internal representation of an input option parameter.
 type Option struct {
 	// The names of this option.
 	Names []string

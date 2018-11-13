@@ -22,15 +22,19 @@ type Application struct {
 	Logo string
 	// Help message for the application.
 	Help string
-	// Function to configure application-level parameters, realistically should just be options.
-	Configure ConfigureFunc
 	// Writer to write output to.
 	Writer io.Writer
 
-	// Array of commands that can be run. May contain sub-commands.
+	// Slice of commands that can be run. May contain sub-commands.
 	commands []*Command
+	// Slice of global options.
+	globalOptionDefinitions []OptionDefinition
+	// Application definition
+	definition *Definition
 	// Application input.
 	input *Input
+	// Application output.
+	output *Output
 	// The path taken to reach the current command (used for help text).
 	path []string
 }
@@ -38,58 +42,60 @@ type Application struct {
 // NewApplication creates a new Application with some sane defaults.
 func NewApplication(name string, version string) *Application {
 	return &Application{
-		Name:      name,
-		UsageName: filepath.Base(os.Args[0]),
-		Version:   version,
-		Writer:    os.Stdout,
+		Name:       name,
+		UsageName:  filepath.Base(os.Args[0]),
+		Version:    version,
+		Writer:     os.Stdout,
+		definition: NewDefinition(),
 	}
 }
 
 // Run runs the configured application, with the given input.
-func (a *Application) Run(params []string, env []string) int {
-	// Create input and output.
-	input := ParseInput(params)
-	output := NewOutput(a.Writer)
-	definition := NewDefinition()
-
-	// Assign input to application.
-	a.input = input
-	a.preConfigure(definition)
-
-	if a.Configure != nil {
-		// Similar to a.preConfigure, this is useful for customising application-level help text.
-		// This however will work just like a command's Configure function.
-		a.Configure(definition)
-
-		// Throw away any defined arguments, as they cannot be used, and will disrupt help text.
-		definition.arguments = make(map[string]parameters.Argument)
+func (a *Application) Run(argv []string, env []string) int {
+	if a.definition == nil {
+		panic("attempted to start application with nil definition")
 	}
 
-	command, path := a.findCommandInInput()
-	if command != nil && command.Configure != nil {
-		command.Configure(definition)
+	// Set output at runtime, so that it's available for everything else that could use it, and
+	// up-to-date with what the user has requested their io.Writer to be.
+	a.output = NewOutput(a.Writer)
+
+	a.configure(a.definition)
+
+	// @TODO: Could we handle global options before we do anything with commands? It wouldn't be too
+	// useful for the `help` argument because we need to know the context (i.e. cmd) we're
+	// running to show the right thing.
+	cmd, path := a.resolveCommand(argv)
+	if cmd != nil && cmd.Configure != nil {
+		cmd.Configure(a.definition)
 	}
 
-	if a.hasHelpOption() || (command == nil || command.Execute == nil) {
-		a.showHelp(output, command, path)
+	// Trim argv so that the command path is not left in and sent to commands.
+	argv = argv[len(path):]
+
+	if a.hasHelpOption(argv) || (cmd == nil || cmd.Execute == nil) {
+		a.showHelp(cmd, path)
 		return 100
 	}
 
-	err := MapInput(definition, input, env)
+	// Assign input to application.
+	a.input = ParseInput2(a.definition, argv)
+
+	err := MapInput(a.definition, a.input, env)
 	if err != nil {
-		output.Println(err)
-		output.Printf("Try '%s --help' for more information.\n", a.UsageName)
+		a.output.Println(err)
+		a.output.Printf("Try '%s --help' for more information.\n", a.UsageName)
 		return 101
 	}
 
-	err = command.Execute(input, output)
+	err = cmd.Execute(a.input, a.output)
 	if err != nil {
-		output.Println(err)
-		output.Printf("Try '%s %s --help' for more information.\n", a.UsageName, command.Name)
+		a.output.Println(err)
+		a.output.Printf("Try '%s %s --help' for more information.\n", a.UsageName, cmd.Name)
 		return 1
 	}
 
-	return output.exitCode
+	return a.output.exitCode
 }
 
 // AddCommands adds commands to the application.
@@ -107,20 +113,24 @@ func (a *Application) Commands() []*Command {
 	return a.commands
 }
 
-// findCommandInInput attempts to find the command to run based on the raw input.
-func (a *Application) findCommandInInput() (*Command, []string) {
+func (a *Application) AddGlobalOption(definition OptionDefinition) {
+	a.globalOptionDefinitions = append(a.globalOptionDefinitions, definition)
+}
+
+// resolveCommand attempts to find the command to run based on the raw input.
+func (a *Application) resolveCommand(args []string) (*Command, []string) {
 	var loop func(depth int, container CommandContainer) *Command
 	var path []string
 
 	loop = func(depth int, container CommandContainer) *Command {
-		if len(a.input.Arguments) == 0 {
+		if len(args) < (depth + 1) {
 			return nil
 		}
 
 		var command *Command
 		for _, cmd := range container.Commands() {
-			isNameMatch := cmd.Name == a.input.Arguments[0].Value
-			isAliasMatch := cmd.Alias == a.input.Arguments[0].Value
+			isNameMatch := cmd.Name == args[depth]
+			isAliasMatch := cmd.Alias == args[depth]
 
 			if isNameMatch || isAliasMatch {
 				command = cmd
@@ -131,8 +141,6 @@ func (a *Application) findCommandInInput() (*Command, []string) {
 		}
 
 		if command != nil {
-			a.input.Arguments = a.input.Arguments[1:]
-
 			subCommand := loop(depth+1, command)
 
 			if subCommand != nil {
@@ -146,11 +154,11 @@ func (a *Application) findCommandInInput() (*Command, []string) {
 	return loop(0, a), path
 }
 
-// hasHelpOption checks to see if a help flag is set, ignoring values. Uses raw input, not mapped
-// input.
-func (a *Application) hasHelpOption() bool {
-	for _, opt := range a.input.Options {
-		if opt.Name == "help" || opt.Name == "h" {
+// hasHelpOption checks to see if a help flag is set, ignoring values. Uses raw args sent to the
+// application.
+func (a *Application) hasHelpOption(args []string) bool {
+	for _, arg := range args {
+		if arg == "--help" || arg == "-h" {
 			return true
 		}
 	}
@@ -158,8 +166,8 @@ func (a *Application) hasHelpOption() bool {
 	return false
 }
 
-// preConfigure configures pre-defined parameters. This is solely defined for help output.
-func (a *Application) preConfigure(definition *Definition) {
+// configure configures pre-defined parameters. This is solely defined for help output.
+func (a *Application) configure(definition *Definition) {
 	var help bool
 
 	definition.AddOption(OptionDefinition{
@@ -167,13 +175,17 @@ func (a *Application) preConfigure(definition *Definition) {
 		Spec:  "-h, --help",
 		Desc:  "Display contextual help?",
 	})
+
+	for _, opt := range a.globalOptionDefinitions {
+		definition.AddOption(opt)
+	}
 }
 
 // showHelp shows contextual help.
-func (a *Application) showHelp(output *Output, command *Command, path []string) {
+func (a *Application) showHelp(command *Command, path []string) {
 	if command != nil {
-		output.Println(DescribeCommand(a, command, path))
+		a.output.Println(DescribeCommand(a, command, path))
 	} else {
-		output.Println(DescribeApplication(a))
+		a.output.Println(DescribeApplication(a))
 	}
 }

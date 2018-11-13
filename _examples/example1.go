@@ -7,9 +7,6 @@ import (
 	"github.com/eidolon/console/parameters"
 )
 
-var name = "World"
-var favNum int
-
 func main() {
 	application := console.NewApplication("eidolon/console", "0.1.0")
 	application.Logo = `
@@ -23,12 +20,31 @@ func main() {
                                                    #
 `
 
+	var isMarmiteNice bool
+	var isVerbose bool
+	var name = "World"
+	var favNum int
+
+	application.AddGlobalOption(console.OptionDefinition{
+		Value:  parameters.NewBoolValue(&isMarmiteNice),
+		Spec:   "-m, --marmite",
+		Desc:   "Is marmite nice?",
+		EnvVar: "MARMITE_NICE",
+	})
+
 	application.AddCommand(&console.Command{
-		Name:        "greet:example",
+		Name:        "greet",
 		Alias:       "g",
 		Description: "Greet's the given user, or the world.",
 		Help:        "You don't have to specify a name.",
 		Configure: func(definition *console.Definition) {
+			definition.AddOption(console.OptionDefinition{
+				Value:  parameters.NewBoolValue(&isVerbose),
+				Spec:   "-v, --isVerbose",
+				Desc:   "Is isVerbose mode enabled?",
+				EnvVar: "EXAMPLE_VERBOSE",
+			})
+
 			definition.AddOption(console.OptionDefinition{
 				Value:  parameters.NewStringValue(&name),
 				Spec:   "-n, --name=NAME",
@@ -45,6 +61,8 @@ func main() {
 		Execute: func(input *console.Input, output *console.Output) error {
 			output.Printf("Hello, %s!\n", name)
 			output.Printf("Your favourite number is %d.\n", favNum)
+			output.Printf("Is isVerbose mode enabled? %t\n", isVerbose)
+			output.Printf("Oh, by the way. Is marmite nice? %t\n", isMarmiteNice)
 			return nil
 		},
 	})
